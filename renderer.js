@@ -24,7 +24,6 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
         for (let child of filesDivChildren) {
             child.remove()
         }
-
     } else {
         const selectorEncoded = encodeURIComponent(targetsToBeDeleted)
         const fileDivsToBeDeleted = document.getElementsByClassName(selectorEncoded)
@@ -37,46 +36,59 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     }
 }
 
-function createSingleLocContent(targetDiv, objName, pathToParent = null) {
+function encapsulatedCreateLocObject(objName, cssSelector, targetAttribute, targetDiv) {
+    const div = document.createElement('div')
+    div.innerText = objName
+    const cssSelectorEncoded = encodeURIComponent(cssSelector)
+    div.setAttribute(targetAttribute, cssSelectorEncoded)
+    div.classList.add("locContentObject")
+    targetDiv.append(div)
+}
+
+function createLocObject(targetDiv, objName, pathToParent = null) {
     if (locHistoryIndex > 0) {
         if (targetDiv == dirsDiv) {
-            const div = document.createElement('div')
-            div.innerText = objName
             const pathForId = pathToParent + '\\' + objName
-            const pathForIdEncoded = encodeURIComponent(pathForId)
-            div.setAttribute("id", pathForIdEncoded)
-            div.setAttribute("class", "locContentObject")
-            targetDiv.append(div)
+            encapsulatedCreateLocObject(objName, pathForId, "id", targetDiv)
+            // const div = document.createElement('div')
+            // div.innerText = objName
+            // const pathForIdEncoded = encodeURIComponent(pathForId)
+            // div.setAttribute("id", pathForIdEncoded)
+            // div.classList.add("locContentObject")
+            // targetDiv.append(div)
         } else if (targetDiv == filesDiv) {
-            const div = document.createElement('div')
-            div.innerText = objName
-            const pathForClassEncoded = encodeURIComponent(pathToParent)
-            div.setAttribute("class", pathForClassEncoded)
-            div.classList.add("locContentObject")
-            targetDiv.append(div)
+            encapsulatedCreateLocObject(objName, pathToParent, "class", targetDiv)
+            // const div = document.createElement('div')
+            // div.innerText = objName
+            // const pathForClassEncoded = encodeURIComponent(pathToParent)
+            // div.setAttribute("class", pathForClassEncoded)
+            // div.classList.add("locContentObject")
+            // targetDiv.append(div)
         }
     } else {
         if (targetDiv == dirsDiv) {
-            const div = document.createElement('div')
-            div.innerText = objName
-            const pathForIdEncoded = encodeURIComponent(objName)
-            div.setAttribute("id", pathForIdEncoded)
-            div.setAttribute("class", "locContentObject")
-            targetDiv.append(div)    
+            encapsulatedCreateLocObject(objName, objName, "id", targetDiv)
+            // const div = document.createElement('div')
+            // div.innerText = objName
+            // const pathForIdEncoded = encodeURIComponent(objName)
+            // div.setAttribute("id", pathForIdEncoded)
+            // div.classList.add("locContentObject")
+            // targetDiv.append(div)    
         } else if (targetDiv == filesDiv) {
-            const div = document.createElement('div')
-            div.innerText = objName
-            const pathForClassEncoded = encodeURIComponent(pathToParent)
-            div.setAttribute("class", pathForClassEncoded)
-            div.classList.add("locContentObject")
-            targetDiv.append(div)
+            encapsulatedCreateLocObject(objName, pathToParent, "class", targetDiv)
+            // const div = document.createElement('div')
+            // div.innerText = objName
+            // const pathForClassEncoded = encodeURIComponent(pathToParent)
+            // div.setAttribute("class", pathForClassEncoded)
+            // div.classList.add("locContentObject")
+            // targetDiv.append(div)
         }
     }
 }
 
-function createAllLocContentElements(targetDiv, objNamesArray, pathToParent = null) {
+function createAllLocObjects(targetDiv, objNamesArray, pathToParent = null) {
     for (let objName of objNamesArray) {
-        createSingleLocContent(targetDiv, objName, pathToParent)
+        createLocObject(targetDiv, objName, pathToParent)
     }
 }
 
@@ -141,7 +153,7 @@ addDirButton.addEventListener('click', async (event) => {
     const rootDir = await window.electronAPI.callWithIpcGetRootDirs()
     if (rootDir != null && !addedRootDirs.dirContent.includes(rootDir)) {
         addedRootDirs.dirContent.push(rootDir)
-        createSingleLocContent(dirsDiv, rootDir, rootDir)
+        createLocObject(dirsDiv, rootDir, rootDir)
     }
 })
 
@@ -166,8 +178,8 @@ dirsDiv.addEventListener('dblclick', async (event) => {
 
 
             const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath)
-            createAllLocContentElements(dirsDiv, locContent.dirContent, newLocPath)
-            createAllLocContentElements(filesDiv, locContent.fileContent, newLocPath)
+            createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath)
+            createAllLocObjects(filesDiv, locContent.fileContent, newLocPath)
 
         } else if (locHistoryIndex > 0) {
             forwardButton.disabled = true
@@ -178,8 +190,8 @@ dirsDiv.addEventListener('dblclick', async (event) => {
     
             const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath)
     
-            createAllLocContentElements(dirsDiv, locContent.dirContent, newLocPath)
-            createAllLocContentElements(filesDiv, locContent.fileContent, newLocPath)
+            createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath)
+            createAllLocObjects(filesDiv, locContent.fileContent, newLocPath)
         }
     }
 })
@@ -196,11 +208,11 @@ backButton.addEventListener('click', async (event) => {
         const newLocPath = navigationWithButtons()
         const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath)
     
-        createAllLocContentElements(dirsDiv, locContent.dirContent, newLocPath)
-        createAllLocContentElements(filesDiv, locContent.fileContent, newLocPath)    
+        createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath)
+        createAllLocObjects(filesDiv, locContent.fileContent, newLocPath)    
     } else {
         const locContent = navigationWithButtons()
-        createAllLocContentElements(dirsDiv, locContent.dirContent)
+        createAllLocObjects(dirsDiv, locContent.dirContent)
     }
     remindScrollHeight()
 })
@@ -216,8 +228,8 @@ forwardButton.addEventListener('click', async (event) => {
     const newLocPath = navigationWithButtons()
     const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath)
     
-    createAllLocContentElements(dirsDiv, locContent.dirContent, newLocPath)
-    createAllLocContentElements(filesDiv, locContent.fileContent, newLocPath)  
+    createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath)
+    createAllLocObjects(filesDiv, locContent.fileContent, newLocPath)  
     
     remindScrollHeight()
 })
@@ -239,7 +251,7 @@ dirsDiv.addEventListener('click', async (event) => {
         if (!selectedDirs.includes(selectedLocPath)) {
             const locContent = await window.electronAPI.callWithIpcGetLocContent(selectedLocPath)
 
-            createAllLocContentElements(filesDiv, locContent.fileContent, selectedLocPath)
+            createAllLocObjects(filesDiv, locContent.fileContent, selectedLocPath)
             selectedDirs.push(selectedLocPath)
         } else {
             removeDisplayedContent(selectedLocPath)
