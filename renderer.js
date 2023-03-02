@@ -1,7 +1,5 @@
 const dirsDiv = document.getElementById('dirsDiv');
 const filesDiv = document.getElementById('filesDiv');
-// let locContentObjects = document.getElementsByClassName('locContentObject')
-// let filenameDivs = document.getElementsByClassName('filenameDiv')
 const backButton = document.getElementById('backButton')
 const addDirButton = document.getElementById('addDirButton')
 const forwardButton = document.getElementById('forwardButton')
@@ -45,50 +43,29 @@ function encapsulatedCreateLocObject(objName, cssSelector, targetAttribute, targ
     targetDiv.append(div)
 }
 
-function createLocObject(targetDiv, objName, pathToParent = null) {
+function createLocObject(targetDiv, objName, selectorString = null) {
     if (locHistoryIndex > 0) {
         if (targetDiv == dirsDiv) {
-            const pathForId = pathToParent + '\\' + objName
-            encapsulatedCreateLocObject(objName, pathForId, "id", targetDiv)
-            // const div = document.createElement('div')
-            // div.innerText = objName
-            // const pathForIdEncoded = encodeURIComponent(pathForId)
-            // div.setAttribute("id", pathForIdEncoded)
-            // div.classList.add("locContentObject")
-            // targetDiv.append(div)
+            const cssSelector = selectorString + '\\' + objName
+            encapsulatedCreateLocObject(objName, cssSelector, "id", targetDiv)
         } else if (targetDiv == filesDiv) {
-            encapsulatedCreateLocObject(objName, pathToParent, "class", targetDiv)
-            // const div = document.createElement('div')
-            // div.innerText = objName
-            // const pathForClassEncoded = encodeURIComponent(pathToParent)
-            // div.setAttribute("class", pathForClassEncoded)
-            // div.classList.add("locContentObject")
-            // targetDiv.append(div)
+            const cssSelector = selectorString
+            encapsulatedCreateLocObject(objName, cssSelector, "class", targetDiv)
         }
     } else {
         if (targetDiv == dirsDiv) {
-            encapsulatedCreateLocObject(objName, objName, "id", targetDiv)
-            // const div = document.createElement('div')
-            // div.innerText = objName
-            // const pathForIdEncoded = encodeURIComponent(objName)
-            // div.setAttribute("id", pathForIdEncoded)
-            // div.classList.add("locContentObject")
-            // targetDiv.append(div)    
+            const cssSelector = objName
+            encapsulatedCreateLocObject(objName, cssSelector, "id", targetDiv)
         } else if (targetDiv == filesDiv) {
-            encapsulatedCreateLocObject(objName, pathToParent, "class", targetDiv)
-            // const div = document.createElement('div')
-            // div.innerText = objName
-            // const pathForClassEncoded = encodeURIComponent(pathToParent)
-            // div.setAttribute("class", pathForClassEncoded)
-            // div.classList.add("locContentObject")
-            // targetDiv.append(div)
+            const cssSelector = selectorString
+            encapsulatedCreateLocObject(objName, cssSelector, "class", targetDiv)
         }
     }
 }
 
-function createAllLocObjects(targetDiv, objNamesArray, pathToParent = null) {
+function createAllLocObjects(targetDiv, objNamesArray, selectorString = null) {
     for (let objName of objNamesArray) {
-        createLocObject(targetDiv, objName, pathToParent)
+        createLocObject(targetDiv, objName, selectorString)
     }
 }
 
