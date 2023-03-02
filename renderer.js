@@ -26,8 +26,10 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
         }
 
     } else {
-        const fileDivsToBeDeleted = filesDiv.getElementsByClassName(targetsToBeDeleted)
+        const selectorEncoded = encodeURIComponent(targetsToBeDeleted)
+        const fileDivsToBeDeleted = document.getElementsByClassName(selectorEncoded)
         const fileDivsToBeDeletedArray = Array.from(fileDivsToBeDeleted)
+        console.log(fileDivsToBeDeletedArray)
 
         for (let fileDiv of fileDivsToBeDeletedArray) {
             fileDiv.remove()
@@ -40,24 +42,33 @@ function createSingleLocContent(targetDiv, objName, pathToParent = null) {
         if (targetDiv == dirsDiv) {
             const div = document.createElement('div')
             div.innerText = objName
-            div.id = pathToParent + '\\' + objName
+            const pathForId = pathToParent + '\\' + objName
+            const pathForIdEncoded = encodeURIComponent(pathForId)
+            div.setAttribute("id", pathForIdEncoded)
+            div.setAttribute("class", "locContentObject")
             targetDiv.append(div)
         } else if (targetDiv == filesDiv) {
             const div = document.createElement('div')
             div.innerText = objName
-            div.className = pathToParent
+            const pathForClassEncoded = encodeURIComponent(pathToParent)
+            div.setAttribute("class", pathForClassEncoded)
+            div.classList.add("locContentObject")
             targetDiv.append(div)
         }
     } else {
         if (targetDiv == dirsDiv) {
             const div = document.createElement('div')
             div.innerText = objName
-            div.id = objName
+            const pathForIdEncoded = encodeURIComponent(objName)
+            div.setAttribute("id", pathForIdEncoded)
+            div.setAttribute("class", "locContentObject")
             targetDiv.append(div)    
         } else if (targetDiv == filesDiv) {
             const div = document.createElement('div')
             div.innerText = objName
-            div.className = pathToParent
+            const pathForClassEncoded = encodeURIComponent(pathToParent)
+            div.setAttribute("class", pathForClassEncoded)
+            div.classList.add("locContentObject")
             targetDiv.append(div)
         }
     }
@@ -137,12 +148,11 @@ addDirButton.addEventListener('click', async (event) => {
 dirsDiv.addEventListener('dblclick', async (event) => {
     rememberScrollHeight()
     event.stopPropagation()
-
-    selectedDirs = []
-
+    
     const target = event.target
     if (target !== event.currentTarget && !event.ctrlKey) {
         removeDisplayedContent()
+        selectedDirs = []
 
         if (locHistoryIndex == 0) {
             addDirButton.disabled = true
@@ -238,5 +248,5 @@ dirsDiv.addEventListener('click', async (event) => {
             selectedDirs.splice(selectedLocPathIndex, 1)
         }
     }
-    console.log(selectedDirs)
+    console.log("filesDiv children:",filesDiv.children)
 })

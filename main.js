@@ -36,7 +36,6 @@ function getLocContent(event, newLocPath, justFiles = false) {
         }
 
         contentSeparated = {dirContent, fileContent}
-        console.log(contentSeparated)
         return contentSeparated  
         
     } else {
@@ -51,7 +50,6 @@ function getLocContent(event, newLocPath, justFiles = false) {
         }
 
         contentSeparated = {dirContent, fileContent}
-        console.log(contentSeparated)
         return contentSeparated   
 
     }
