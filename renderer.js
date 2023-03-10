@@ -10,6 +10,9 @@ let locHistory = [];
 let addedRootDirs = {dirContent: []};
 let scrollHistory = [];
 let selectedDirs = [];
+// When sortingState == 0 fileDivs are in original order, when == 1 they're sorted alphabetically
+// and when == 2 they're sorted in reverse alphabetical order
+let alphabeticalSortingState = 0;
 
 function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     if (targetsToBeDeleted == 'everything') {
@@ -213,6 +216,7 @@ dirsDiv.addEventListener('click', async (event) => {
     event.stopPropagation();
     const target = event.target;
     let selectedLocPath;
+    console.log(filesDiv.querySelectorAll('.locContentObject'));
 
     if (event.ctrlKey && target !== event.currentTarget) {
         
@@ -235,12 +239,36 @@ dirsDiv.addEventListener('click', async (event) => {
     }
 })
 
-sortByFilename.addEventListener('click', () => {
-    const fileDivs = filesDiv.querySelectorAll('.locContentObject');
-    const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
-    console.log(fileDivsSorted);
+sortByFilename.addEventListener('click', async (event) => {
+    event.stopPropagation();
+    const target = event.target;
 
-    for (fileDiv of fileDivsSorted) {
-        filesDiv.appendChild(fileDiv)
+    if (alphabeticalSortingState == 0) {
+        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+        const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
+        alphabeticalSortingState += 1;
+
+        for (fileDiv of fileDivsSorted) {
+            filesDiv.appendChild(fileDiv);
+        }
+    } else if (alphabeticalSortingState == 1) {
+        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+        const fileDivsSorted = Array.from(fileDivs).sort((a, b) => b.innerText.localeCompare(a.innerText));
+        alphabeticalSortingState += 1;
+
+        for (fileDiv of fileDivsSorted) {
+            filesDiv.appendChild(fileDiv);
+        }
+    } else {
+        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+        alphabeticalSortingState = 0;
+        
+        for (fileDiv of fileDivs) {
+            fileDiv.remove();
+        }
+        for (dir of selectedDirs) {
+            const locContent = await window.electronAPI.callWithIpcGetLocContent(dir);
+            createAllLocObjects(filesDiv, locContent.fileContent, dir);
+        }
     }
 })
