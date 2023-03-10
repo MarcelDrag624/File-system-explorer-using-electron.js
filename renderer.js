@@ -3,6 +3,7 @@ const filesDiv = document.getElementById('filesDiv');
 const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
+const sortByFilename = document.getElementById('sortByFilename');
 
 let locHistoryIndex = 0;
 let locHistory = [];
@@ -26,7 +27,6 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
         const selectorEncoded = encodeURIComponent(targetsToBeDeleted);
         const fileDivsToBeDeleted = document.getElementsByClassName(selectorEncoded);
         const fileDivsToBeDeletedArray = Array.from(fileDivsToBeDeleted);
-        console.log(fileDivsToBeDeletedArray);
 
         for (let fileDiv of fileDivsToBeDeletedArray) {
             fileDiv.remove();
@@ -232,5 +232,15 @@ dirsDiv.addEventListener('click', async (event) => {
             const selectedLocPathIndex = selectedDirs.indexOf(selectedLocPath);
             selectedDirs.splice(selectedLocPathIndex, 1);
         }
+    }
+})
+
+sortByFilename.addEventListener('click', () => {
+    const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+    const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
+    console.log(fileDivsSorted);
+
+    for (fileDiv of fileDivsSorted) {
+        filesDiv.appendChild(fileDiv)
     }
 })

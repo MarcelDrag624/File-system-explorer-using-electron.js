@@ -13,7 +13,7 @@ body {
     height: 100%;
 }
 
-#navDiv {
+#leftPanel {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -38,7 +38,7 @@ body {
     background-color: transparent;
 }
 
-#notNavDiv {
+#rightPanel {
     flex: 2;
     background-color: green;
     display: flex;
