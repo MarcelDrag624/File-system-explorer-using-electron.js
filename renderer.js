@@ -140,11 +140,10 @@ addDirButton.addEventListener('click', async (event) => {
 dirsDiv.addEventListener('dblclick', async (event) => {
     rememberScrollHeight();
     event.stopPropagation();
-    
     const target = event.target;
+
     if (target !== event.currentTarget && !event.ctrlKey) {
         removeDisplayedContent();
-        selectedDirs = [];
 
         if (locHistoryIndex == 0) {
             addDirButton.disabled = true;
@@ -156,10 +155,10 @@ dirsDiv.addEventListener('dblclick', async (event) => {
             const newLocPath = target.innerText;
             locHistoryIndex += 1;
 
-
             const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath);
             createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
             createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
+            selectedDirs = [newLocPath];
 
         } else if (locHistoryIndex > 0) {
             forwardButton.disabled = true;
@@ -172,6 +171,7 @@ dirsDiv.addEventListener('dblclick', async (event) => {
     
             createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
             createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
+            selectedDirs = [newLocPath];
         }
     }
 })
@@ -179,9 +179,6 @@ dirsDiv.addEventListener('dblclick', async (event) => {
 backButton.addEventListener('click', async (event) => {
     event.stopPropagation();
     removeDisplayedContent();
-
-    selectedDirs = [];
-
     locHistoryIndex -= 1;
 
     if (locHistoryIndex > 0) {
@@ -189,6 +186,7 @@ backButton.addEventListener('click', async (event) => {
         const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath);
         createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
         createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
+        selectedDirs = [newLocPath];
     } else {
         const locContent = navigationWithButtons();
         createAllLocObjects(dirsDiv, locContent.dirContent);
@@ -199,8 +197,6 @@ backButton.addEventListener('click', async (event) => {
 forwardButton.addEventListener('click', async (event) => {
     event.stopPropagation();
     removeDisplayedContent();
-
-    selectedDirs = [];
     locHistoryIndex += 1;
 
     const newLocPath = navigationWithButtons();
@@ -208,15 +204,16 @@ forwardButton.addEventListener('click', async (event) => {
     
     createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
     createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
-    
+    selectedDirs = [newLocPath];
     remindScrollHeight();
 })
 
 dirsDiv.addEventListener('click', async (event) => {
+    console.time("Selecting dirs")
+    console.log(selectedDirs);
     event.stopPropagation();
     const target = event.target;
     let selectedLocPath;
-    console.log(filesDiv.querySelectorAll('.locContentObject'));
 
     if (event.ctrlKey && target !== event.currentTarget) {
         
@@ -237,6 +234,7 @@ dirsDiv.addEventListener('click', async (event) => {
             selectedDirs.splice(selectedLocPathIndex, 1);
         }
     }
+    console.timeEnd("Selecting dirs")
 })
 
 sortByFilename.addEventListener('click', async (event) => {
