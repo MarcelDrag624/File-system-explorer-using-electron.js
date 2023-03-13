@@ -3,7 +3,8 @@ const filesDiv = document.getElementById('filesDiv');
 const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
-const sortByFilenameDiv = document.getElementById('sortByFilename');
+const sortByFilenameBtn = document.getElementById('sortByFilename');
+sortByFilenameBtn.disabled = true;
 
 let locHistoryIndex = 0;
 let locHistory = [];
@@ -149,26 +150,9 @@ function remindScrollHeight() {
 // }
 
 async function sortingFileDivs() {
-    if (alphabeticalSortingState == 1) {
+    console.log(alphabeticalSortingState)
+    if (alphabeticalSortingState == 0) {
         const fileDivs = filesDiv.querySelectorAll('.locContentObject');
-        const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
-
-        for (fileDiv of fileDivsSorted) {
-            filesDiv.appendChild(fileDiv);
-        }
-
-    } else if (alphabeticalSortingState == 2) {
-        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
-        const fileDivsSorted = Array.from(fileDivs).sort((a, b) => b.innerText.localeCompare(a.innerText));
-
-        for (fileDiv of fileDivsSorted) {
-            filesDiv.appendChild(fileDiv);
-        }
-
-    } else {
-        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
-
-        alphabeticalSortingState = 0;
         
         for (fileDiv of fileDivs) {
             fileDiv.remove();
@@ -179,8 +163,70 @@ async function sortingFileDivs() {
 
             createAllLocObjects(filesDiv, locContent.fileContent, dir);
         }
+    } else if (alphabeticalSortingState == 1) {
+        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+        const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
+
+        for (fileDiv of fileDivsSorted) {
+            filesDiv.appendChild(fileDiv);
+        }
+        alphabeticalSortingState = -1;
     }
 }
+
+// async function sortingFileDivs() {
+//     console.log(alphabeticalSortingState)
+//     if (selectedDirs.length == 1) {
+//         if (alphabeticalSortingState == 1) {
+//             const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+//             const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
+
+//             for (fileDiv of fileDivsSorted) {
+//                 filesDiv.appendChild(fileDiv);
+//             }
+//         } else {
+//             const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+//             const fileDivsSorted = Array.from(fileDivs).sort((a, b) => b.innerText.localeCompare(a.innerText));
+
+//             for (fileDiv of fileDivsSorted) {
+//                 filesDiv.appendChild(fileDiv);
+//             }
+//             alphabeticalSortingState = 0;
+//         }
+//     } else {
+//         if (alphabeticalSortingState == 1) {
+//             const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+//             const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
+
+//             for (fileDiv of fileDivsSorted) {
+//                 filesDiv.appendChild(fileDiv);
+//             }
+
+//         } else if (alphabeticalSortingState == 2) {
+//             const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+//             const fileDivsSorted = Array.from(fileDivs).sort((a, b) => b.innerText.localeCompare(a.innerText));
+
+//             for (fileDiv of fileDivsSorted) {
+//                 filesDiv.appendChild(fileDiv);
+//             }
+
+//         } else {
+//             const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+
+//             alphabeticalSortingState = 0;
+            
+//             for (fileDiv of fileDivs) {
+//                 fileDiv.remove();
+//             }
+
+//             for (dir of selectedDirs) {
+//                 const locContent = await window.electronAPI.callWithIpcGetLocContent(dir);
+
+//                 createAllLocObjects(filesDiv, locContent.fileContent, dir);
+//             }
+//         }
+//     }
+// }
 
 addDirButton.addEventListener('click', async (event) => {
     event.stopPropagation();
@@ -237,7 +283,8 @@ dirsDiv.addEventListener('dblclick', async (event) => {
             selectedDirs = [newLocPath];
         }
 
-        sortingFileDivs();
+        // sortingFileDivs();
+        sortByFilenameBtn.disabled = true;
     }
 })
 
@@ -264,7 +311,8 @@ backButton.addEventListener('click', async (event) => {
         selectedDirs = [];
     }
 
-    sortingFileDivs();
+    // sortingFileDivs();
+    sortByFilenameBtn.disabled = true;
 
     remindScrollHeight();
 })
@@ -284,7 +332,8 @@ forwardButton.addEventListener('click', async (event) => {
 
     selectedDirs = [newLocPath];
 
-    sortingFileDivs();
+    // sortingFileDivs();
+    sortByFilenameBtn.disabled = true;
 
     remindScrollHeight();
 })
@@ -313,8 +362,12 @@ dirsDiv.addEventListener('click', async (event) => {
             const selectedLocPathIndex = selectedDirs.indexOf(selectedLocPath);
             selectedDirs.splice(selectedLocPathIndex, 1);
         }
-
-        sortingFileDivs();
+        if (selectedDirs.length <= 1) {
+            sortByFilenameBtn.disabled = true;
+        } else {
+            sortByFilenameBtn.disabled = false;
+            sortingFileDivs();
+        }
     }
 })
 
