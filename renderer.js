@@ -130,6 +130,24 @@ function remindScrollHeight() {
     dirsDiv.scrollTop = scrollHistory[locHistoryIndex];
 }
 
+// async function sortingFileDivs() {
+//     if (selectedDirs.length == 1) {
+//         if (alphabeticalSortingState == 0) {
+//             // bez sortowania (kolejnosc plikow zgodna z kolejnoscia zaznaczania folderow)
+//         } else if (alphabeticalSortingState == 1) {
+//             // odwrotnie alfabetycznie
+//         }
+//     } else if (selectedDirs.length > 1) {
+//         if (alphabeticalSortingState == 0) {
+//             // bez sortowania (kolejnosc plikow zgodna z kolejnoscia zaznaczania folderow)            
+//         } else if (alphabeticalSortingState == 1) {
+//             // alfabetycznie
+//         } else if (alphabeticalSortingState == 2) {
+//             // odwrotnie alfabetycznie            
+//         }
+//     }
+// }
+
 async function sortingFileDivs() {
     if (alphabeticalSortingState == 1) {
         const fileDivs = filesDiv.querySelectorAll('.locContentObject');
@@ -300,9 +318,14 @@ dirsDiv.addEventListener('click', async (event) => {
     }
 })
 
-sortByFilename.addEventListener('click', (event) => {
+sortByFilenameDiv.addEventListener('click', (event) => {
     event.stopPropagation();
     const target = event.target;
-    alphabeticalSortingState += 1;
+
+    if (selectedDirs.length == 1) {
+        alphabeticalSortingState += 2;
+    } else if (selectedDirs.length > 1) {
+        alphabeticalSortingState += 1;
+    }
     sortingFileDivs();
 })
