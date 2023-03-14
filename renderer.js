@@ -323,9 +323,14 @@ sortByFilenameDiv.addEventListener('click', (event) => {
     const target = event.target;
 
     if (selectedDirs.length == 1) {
-        alphabeticalSortingState += 2;
+        if(alphabeticalSortingState == 1) {
+            alphabeticalSortingState = 2;
+        } else {
+            alphabeticalSortingState += 2;   
+        }
     } else if (selectedDirs.length > 1) {
         alphabeticalSortingState += 1;
     }
+    console.log(alphabeticalSortingState);
     sortingFileDivs();
 })
