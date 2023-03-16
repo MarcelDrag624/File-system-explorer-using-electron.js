@@ -67,6 +67,26 @@ body {
   background-color: orange;
   overflow: auto;
   overflow-wrap: anywhere;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+#filenamesDiv {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+  background-color: blue;
+}
+
+#creationTimeDiv {
+  -webkit-box-flex: 5;
+      -ms-flex: 5;
+          flex: 5;
+  background-color: yellow;
+  height: 100%;
 }
 
 #notFilesDiv {
@@ -74,5 +94,23 @@ body {
       -ms-flex: 1;
           flex: 1;
   background-color: black;
+}
+
+#sortingBar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#sortByFilename {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+}
+
+#sortByCreationTime {
+  -webkit-box-flex: 5;
+      -ms-flex: 5;
+          flex: 5;
 }
 /*# sourceMappingURL=main.css.map */

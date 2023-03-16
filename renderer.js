@@ -1,5 +1,5 @@
 const dirsDiv = document.getElementById('dirsDiv');
-const filesDiv = document.getElementById('filesDiv');
+const filenamesDiv = document.getElementById('filenamesDiv');
 const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
@@ -18,13 +18,13 @@ let alphabeticalSortingState = 0;
 function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     if (targetsToBeDeleted == 'everything') {
         const dirsDivChildren = Array.from(dirsDiv.children);
-        const filesDivChildren = Array.from(filesDiv.children);
+        const filenamesDivChildren = Array.from(filenamesDiv.children);
     
         for (let child of dirsDivChildren) {
             child.remove();
         }
 
-        for (let child of filesDivChildren) {
+        for (let child of filenamesDivChildren) {
             child.remove();
         }
     } else {
@@ -52,7 +52,7 @@ function createLocObject(targetDiv, objName, selectorString = null) {
         if (targetDiv == dirsDiv) {
             const cssSelector = selectorString + '\\' + objName;
             encapsulatedCreateLocObject(objName, cssSelector, "id", targetDiv);
-        } else if (targetDiv == filesDiv) {
+        } else if (targetDiv == filenamesDiv) {
             const cssSelector = selectorString;
             encapsulatedCreateLocObject(objName, cssSelector, "class", targetDiv);
         }
@@ -60,7 +60,7 @@ function createLocObject(targetDiv, objName, selectorString = null) {
         if (targetDiv == dirsDiv) {
             const cssSelector = objName;
             encapsulatedCreateLocObject(objName, cssSelector, "id", targetDiv);
-        } else if (targetDiv == filesDiv) {
+        } else if (targetDiv == filenamesDiv) {
             const cssSelector = selectorString;
             encapsulatedCreateLocObject(objName, cssSelector, "class", targetDiv);
         }
@@ -150,34 +150,34 @@ function remindScrollHeight() {
 
 async function sortingFileDivs() {
     if (alphabeticalSortingState == 1) {
-        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
-        const fileDivsSorted = Array.from(fileDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
+        const filenameDivs = filenamesDiv.querySelectorAll('.locContentObject');
+        const filenameDivsSorted = Array.from(filenameDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
 
-        for (fileDiv of fileDivsSorted) {
-            filesDiv.appendChild(fileDiv);
+        for (filenameDiv of filenameDivsSorted) {
+            filenamesDiv.appendChild(filenameDiv);
         }
 
     } else if (alphabeticalSortingState == 2) {
-        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
-        const fileDivsSorted = Array.from(fileDivs).sort((a, b) => b.innerText.localeCompare(a.innerText));
+        const filenameDivs = filenamesDiv.querySelectorAll('.locContentObject');
+        const filenameDivsSorted = Array.from(filenameDivs).sort((a, b) => b.innerText.localeCompare(a.innerText));
 
-        for (fileDiv of fileDivsSorted) {
-            filesDiv.appendChild(fileDiv);
+        for (filenameDiv of filenameDivsSorted) {
+            filenamesDiv.appendChild(filenameDiv);
         }
 
     } else {
-        const fileDivs = filesDiv.querySelectorAll('.locContentObject');
+        const filenameDivs = filenamesDiv.querySelectorAll('.locContentObject');
 
         alphabeticalSortingState = 0;
         
-        for (fileDiv of fileDivs) {
-            fileDiv.remove();
+        for (filenameDiv of filenameDivs) {
+            filenameDiv.remove();
         }
 
         for (dir of selectedDirs) {
             const locContent = await window.electronAPI.callWithIpcGetLocContent(dir);
 
-            createAllLocObjects(filesDiv, locContent.fileContent, dir);
+            createAllLocObjects(filenamesDiv, locContent.fileContent, dir);
         }
     }
 }
@@ -217,7 +217,7 @@ dirsDiv.addEventListener('dblclick', async (event) => {
             const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath);
 
             createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
-            createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
+            createAllLocObjects(filenamesDiv, locContent.fileContent, newLocPath);
 
             selectedDirs = [newLocPath];
 
@@ -232,7 +232,7 @@ dirsDiv.addEventListener('dblclick', async (event) => {
             const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath);
     
             createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
-            createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
+            createAllLocObjects(filenamesDiv, locContent.fileContent, newLocPath);
 
             selectedDirs = [newLocPath];
         }
@@ -253,7 +253,7 @@ backButton.addEventListener('click', async (event) => {
         const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath);
 
         createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
-        createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
+        createAllLocObjects(filenamesDiv, locContent.fileContent, newLocPath);
 
         selectedDirs = [newLocPath];
     } else {
@@ -280,7 +280,7 @@ forwardButton.addEventListener('click', async (event) => {
     const locContent = await window.electronAPI.callWithIpcGetLocContent(newLocPath);
     
     createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
-    createAllLocObjects(filesDiv, locContent.fileContent, newLocPath);
+    createAllLocObjects(filenamesDiv, locContent.fileContent, newLocPath);
 
     selectedDirs = [newLocPath];
 
@@ -306,7 +306,7 @@ dirsDiv.addEventListener('click', async (event) => {
 
         if (!selectedDirs.includes(selectedLocPath)) {
             const locContent = await window.electronAPI.callWithIpcGetLocContent(selectedLocPath);
-            createAllLocObjects(filesDiv, locContent.fileContent, selectedLocPath);
+            createAllLocObjects(filenamesDiv, locContent.fileContent, selectedLocPath);
             selectedDirs.push(selectedLocPath);
         } else {
             removeDisplayedContent(selectedLocPath);         

@@ -50,9 +50,33 @@ body {
     background-color: orange;
     overflow: auto;
     overflow-wrap: anywhere;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#filenamesDiv {
+    flex: 3;
+    background-color: blue;
+}
+
+#creationTimeDiv {
+    flex: 5;
+    background-color: yellow;
 }
 
 #notFilesDiv {
     flex: 1;
     background-color: black;
+}
+
+#sortingBar {
+    display: flex;
+}
+
+#sortByFilename {
+    flex: 3;
+}
+
+#sortByCreationTime {
+    flex: 5;
 }
