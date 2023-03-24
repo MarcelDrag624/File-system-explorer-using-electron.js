@@ -86,7 +86,6 @@ body {
       -ms-flex: 5;
           flex: 5;
   background-color: yellow;
-  height: 100%;
 }
 
 #notFilesDiv {
