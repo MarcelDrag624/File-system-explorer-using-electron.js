@@ -226,11 +226,15 @@ dirsDiv.addEventListener('dblclick', async (event) => {
     if (target !== event.currentTarget && !event.ctrlKey) {
         removeDisplayedContent();
 
-        const locContent = await window.electronAPI.callWithIpcGetClickedDirContent(clickedDirName);
-        locHistoryIndex = locContent.locHistoryIndex;
-
-        createAllLocObjects(dirsDiv, locContent.dirContent, locContent.newLocPath);
-        createAllLocObjects(filenamesDiv, locContent.fileContent, locContent.newLocPath);
+        const acquiredData = await window.electronAPI.callWithIpcGetClickedDirContent(clickedDirName);
+        const locHistoryData = acquiredData[0];
+        const locContent = acquiredData[1];
+        locHistoryIndex = locHistoryData.locHistoryIndex;
+        
+        for (let loc of locContent) {
+            createAllLocObjects(dirsDiv, loc.dirContent, loc.newLocPath);
+            createAllLocObjects(filenamesDiv, loc.fileContent, loc.newLocPath);    
+        }
 
         // sortingFileDivs();
     }
@@ -245,14 +249,20 @@ backButton.addEventListener('click', async (event) => {
 
     // if (locHistoryIndex > 0) {
     //     const newLocPath = navigationWithButtons();
-        const locContent = await window.electronAPI.callWithIpcGetPreviousDirContent();
-        locHistoryIndex = locContent.locHistoryIndex;
+    const acquiredData = await window.electronAPI.callWithIpcGetPreviousDirContent();
+    const locHistoryData = acquiredData[0];
+    const locContent = acquiredData[1];
+    locHistoryIndex = locHistoryData.locHistoryIndex;
 
         if (locHistoryIndex > 0) {
-            createAllLocObjects(dirsDiv, locContent.dirContent, locContent.newLocPath);
-            createAllLocObjects(filenamesDiv, locContent.fileContent, locContent.newLocPath);
+            for (let loc of locContent) {
+                createAllLocObjects(dirsDiv, loc.dirContent, loc.newLocPath);
+                createAllLocObjects(filenamesDiv, loc.fileContent, loc.newLocPath);    
+            }
         } else {
-            createAllLocObjects(dirsDiv, locContent.dirContent);
+            for (let loc of locContent) {
+                createAllLocObjects(dirsDiv, loc.dirContent);
+            }
         }
 
     //     createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
@@ -280,11 +290,15 @@ forwardButton.addEventListener('click', async (event) => {
     // locHistoryIndex += 1;
 
     // const newLocPath = navigationWithButtons();
-    const locContent = await window.electronAPI.callWithIpcGetNextDirContent();
-    locHistoryIndex = locContent.locHistoryIndex;
+    const acquiredData = await window.electronAPI.callWithIpcGetNextDirContent();
+    const locHistoryData = acquiredData[0];
+    const locContent = acquiredData[1];
+    locHistoryIndex = locHistoryData.locHistoryIndex;
     
-    createAllLocObjects(dirsDiv, locContent.dirContent, locContent.newLocPath);
-    createAllLocObjects(filenamesDiv, locContent.fileContent, locContent.newLocPath);
+    for (let loc of locContent) {
+        createAllLocObjects(dirsDiv, loc.dirContent, loc.newLocPath);
+        createAllLocObjects(filenamesDiv, loc.fileContent, loc.newLocPath);        
+    }
 
     // selectedDirs = [newLocPath];
 
@@ -318,7 +332,7 @@ dirsDiv.addEventListener('click', async (event) => {
             selectedDirs.splice(selectedLocPathIndex, 1);
         }
 
-        sortingFileDivs();
+        // sortingFileDivs();
     }
 })
 

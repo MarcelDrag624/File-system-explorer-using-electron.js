@@ -6,6 +6,7 @@ let addedRootDirs = {dirContent: []};
 let locHistory = [];
 let locHistoryIndex = 0;
 let selectedDirs = [];
+let currentScope = [];
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -47,13 +48,18 @@ function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement =
 }
 
 function getLocContent(newLocPath = null, justFiles = false) {
-    dirContent = [];
-    fileContent = [];
-    contentSeparated = [];
+    console.log(newLocPath);
+
+    let dirContent = [];
+    let fileContent = [];
+    let locHistoryData;
+    let contentSeparated = [];
     
     if (locHistoryIndex == 0 && newLocPath == null) {
-        contentSeparated = {dirContent: addedRootDirs.dirContent, locHistoryIndex, locHistoryLength: locHistory.length};
-        return contentSeparated;
+        contentSeparated = [{dirContent: addedRootDirs.dirContent}];
+        locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
+        currentScope = [locHistoryData, contentSeparated];
+        return currentScope;
 
     } else {
         contentMixed = fs.readdirSync(newLocPath);
@@ -67,8 +73,10 @@ function getLocContent(newLocPath = null, justFiles = false) {
                 } catch (err) {}
             }
     
-            contentSeparated = {dirContent, fileContent, newLocPath, locHistoryIndex, locHistoryLength: locHistory.length};
-            return contentSeparated;
+            contentSeparated = [{dirContent, fileContent, newLocPath}];
+            locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
+            currentScope = [locHistoryData, contentSeparated];
+            return currentScope;
             
         } else {
             for (let contentElement of contentMixed) {
@@ -81,8 +89,10 @@ function getLocContent(newLocPath = null, justFiles = false) {
                 } catch (err) {}
             }
     
-            contentSeparated = {dirContent, fileContent, newLocPath, locHistoryIndex, locHistoryLength: locHistory.length};
-            return contentSeparated;
+            contentSeparated = [{dirContent, fileContent, newLocPath}];
+            locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
+            currentScope = [locHistoryData, contentSeparated];
+            return currentScope;
         }
     }
 }
