@@ -5,7 +5,7 @@ const fs = require('fs');
 let addedRootDirs = {dirContent: []};
 let locHistory = [];
 let locHistoryIndex = 0;
-let selectedDirs = [];
+let currentScopeDirs = [];
 let currentScope = [];
 
 function createWindow() {
@@ -48,18 +48,14 @@ function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement =
 }
 
 function getLocContent(newLocPath = null, justFiles = false) {
-    console.log(newLocPath);
 
     let dirContent = [];
     let fileContent = [];
-    let locHistoryData;
     let contentSeparated = [];
     
     if (locHistoryIndex == 0 && newLocPath == null) {
         contentSeparated = [{dirContent: addedRootDirs.dirContent}];
-        locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-        currentScope = [locHistoryData, contentSeparated];
-        return currentScope;
+        return contentSeparated;    
 
     } else {
         contentMixed = fs.readdirSync(newLocPath);
@@ -74,9 +70,7 @@ function getLocContent(newLocPath = null, justFiles = false) {
             }
     
             contentSeparated = [{dirContent, fileContent, newLocPath}];
-            locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-            currentScope = [locHistoryData, contentSeparated];
-            return currentScope;
+            return contentSeparated;
             
         } else {
             for (let contentElement of contentMixed) {
@@ -90,9 +84,7 @@ function getLocContent(newLocPath = null, justFiles = false) {
             }
     
             contentSeparated = [{dirContent, fileContent, newLocPath}];
-            locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-            currentScope = [locHistoryData, contentSeparated];
-            return currentScope;
+            return contentSeparated;
         }
     }
 }
@@ -104,7 +96,7 @@ function getClickedDirContent(event, clickedDirName) {
         locHistoryIndex += 1;
         locHistory = [];
         newLocPath = clickedDirName;
-        selectedDirs = [clickedDirName];
+        currentScopeDirs = [clickedDirName];
 
         locHistory.push(clickedDirName);
 
@@ -114,29 +106,33 @@ function getClickedDirContent(event, clickedDirName) {
         newLocPath = buildLocPath('fromOriginal', clickedDirName);
 
         locHistoryIndex += 1;
-        selectedDirs = [clickedDirName];
+        currentScopeDirs = [clickedDirName];
 
         mainWindow.webContents.send('chanel3', locHistoryIndex, locHistory.length);
     }
-    let newContent = getLocContent(newLocPath);
-    return newContent;
+    const locContent = getLocContent(newLocPath);
+    locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
+    dataToBeTransferred = {locHistoryData, currentScope: locContent};
+    return dataToBeTransferred;
 }
 
 function getPreviousDirContent(event) {
-    let newContent;
+    let locContent;
     locHistoryIndex -= 1;
     mainWindow.webContents.send('chanel3', locHistoryIndex, locHistory.length);
 
     if (locHistoryIndex > 0) {
-        const newLocPath = buildLocPath('fromCopy');
-        selectedDirs = [newLocPath];
-        newContent = getLocContent(newLocPath);
+        newLocPath = buildLocPath('fromCopy');
+        currentScopeDirs = [newLocPath];
+        locContent = getLocContent(newLocPath);
 
     } else {
-        selectedDirs = [];
-        newContent = getLocContent();
+        currentScopeDirs = [];
+        locContent = getLocContent();
     }
-    return newContent;
+    locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
+    dataToBeTransferred = {locHistoryData, currentScope: locContent};
+    return dataToBeTransferred;
 }
 
 function getNextDirContent(event) {
@@ -151,12 +147,34 @@ function getNextDirContent(event) {
         newLocPath = buildLocPath('fromCopy');
 
     }
-    selectedDirs = [newLocPath];
+    currentScopeDirs = [newLocPath];
 
-    const newContent = getLocContent(newLocPath);
-
-    return newContent;
+    const locContent = getLocContent(newLocPath);
+    
+    locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
+    dataToBeTransferred = {locHistoryData, currentScope: locContent};
+    return dataToBeTransferred;
 }
+
+// function addSelectedDirToCurrentScope(event, clickedDirName) {
+//     let selectedLocPath;
+
+//     if (locHistoryIndex == 0) {
+//         selectedLocPath = clickedDirName;
+//     } else {
+//         selectedLocPath = buildLocPath('fromCopy');
+//         selectedLocPath += '\\' + clickedDirName;
+//     }   
+
+//     if (!currentScopeDirs.includes(selectedLocPath)) {
+//         const locContent = getLocContent(selectedLocPath);
+//         createAllLocObjects(filenamesDiv, locContent.fileContent, selectedLocPath);
+//         currentScopeDirs.push(selectedLocPath);
+//     } else {
+//         removeDisplayedContent(selectedLocPath);         
+//         const selectedLocPathIndex = currentScopeDirs.indexOf(selectedLocPath);
+//         currentScopeDirs.splice(selectedLocPathIndex, 1);
+// }
 
 app.whenReady().then(() => {
     ipcMain.handle('chanel1', getRootDirs);

@@ -44,7 +44,6 @@ function encapsulatedCreateLocObject(objName, cssSelector, targetAttribute, targ
     div.setAttribute(targetAttribute, cssSelectorEncoded);
     div.classList.add("locContentObject");
     targetDiv.append(div);
-    console.log(div);
 }
 
 function createLocObject(targetDiv, objName, selectorString = null) {
@@ -175,9 +174,9 @@ async function sortingFileDivs() {
         }
 
         for (dir of selectedDirs) {
-            const locContent = await window.electronAPI.callWithIpcGetLocContent(dir);
+            const currentScope = await window.electronAPI.callWithIpcGetLocContent(dir);
 
-            createAllLocObjects(filenamesDiv, locContent.fileContent, dir);
+            createAllLocObjects(filenamesDiv, currentScope.fileContent, dir);
         }
     }
 }
@@ -227,11 +226,11 @@ dirsDiv.addEventListener('dblclick', async (event) => {
         removeDisplayedContent();
 
         const acquiredData = await window.electronAPI.callWithIpcGetClickedDirContent(clickedDirName);
-        const locHistoryData = acquiredData[0];
-        const locContent = acquiredData[1];
+        const locHistoryData = acquiredData.locHistoryData;
+        const currentScope = acquiredData.currentScope;
         locHistoryIndex = locHistoryData.locHistoryIndex;
         
-        for (let loc of locContent) {
+        for (let loc of currentScope) {
             createAllLocObjects(dirsDiv, loc.dirContent, loc.newLocPath);
             createAllLocObjects(filenamesDiv, loc.fileContent, loc.newLocPath);    
         }
@@ -250,29 +249,29 @@ backButton.addEventListener('click', async (event) => {
     // if (locHistoryIndex > 0) {
     //     const newLocPath = navigationWithButtons();
     const acquiredData = await window.electronAPI.callWithIpcGetPreviousDirContent();
-    const locHistoryData = acquiredData[0];
-    const locContent = acquiredData[1];
+    const locHistoryData = acquiredData.locHistoryData;
+    const currentScope = acquiredData.currentScope;
     locHistoryIndex = locHistoryData.locHistoryIndex;
 
         if (locHistoryIndex > 0) {
-            for (let loc of locContent) {
+            for (let loc of currentScope) {
                 createAllLocObjects(dirsDiv, loc.dirContent, loc.newLocPath);
                 createAllLocObjects(filenamesDiv, loc.fileContent, loc.newLocPath);    
             }
         } else {
-            for (let loc of locContent) {
+            for (let loc of currentScope) {
                 createAllLocObjects(dirsDiv, loc.dirContent);
             }
         }
 
-    //     createAllLocObjects(dirsDiv, locContent.dirContent, newLocPath);
-    //     createAllLocObjects(filenamesDiv, locContent.fileContent, newLocPath);
+    //     createAllLocObjects(dirsDiv, currentScope.dirContent, newLocPath);
+    //     createAllLocObjects(filenamesDiv, currentScope.fileContent, newLocPath);
 
     //     selectedDirs = [newLocPath];
     // } else {
-    //     const locContent = navigationWithButtons();
+    //     const currentScope = navigationWithButtons();
 
-    //     createAllLocObjects(dirsDiv, locContent.dirContent);
+    //     createAllLocObjects(dirsDiv, currentScope.dirContent);
 
     //     selectedDirs = [];
     // }
@@ -291,11 +290,11 @@ forwardButton.addEventListener('click', async (event) => {
 
     // const newLocPath = navigationWithButtons();
     const acquiredData = await window.electronAPI.callWithIpcGetNextDirContent();
-    const locHistoryData = acquiredData[0];
-    const locContent = acquiredData[1];
+    const locHistoryData = acquiredData.locHistoryData;
+    const currentScope = acquiredData.currentScope;
     locHistoryIndex = locHistoryData.locHistoryIndex;
     
-    for (let loc of locContent) {
+    for (let loc of currentScope) {
         createAllLocObjects(dirsDiv, loc.dirContent, loc.newLocPath);
         createAllLocObjects(filenamesDiv, loc.fileContent, loc.newLocPath);        
     }
@@ -323,7 +322,7 @@ dirsDiv.addEventListener('click', async (event) => {
         }   
 
         if (!selectedDirs.includes(selectedLocPath)) {
-            const locContent = await window.electronAPI.callWithIpcGetLocContent(selectedLocPath);
+            const currentScope = await window.electronAPI.callWithIpcGetLocContent(selectedLocPath);
             createAllLocObjects(filenamesDiv, locContent.fileContent, selectedLocPath);
             selectedDirs.push(selectedLocPath);
         } else {
