@@ -6,4 +6,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     callWithIpcUpdateNavigationMode: (locHistoryIndex, locHistoryLength) => ipcRenderer.on('chanel3', locHistoryIndex, locHistoryLength),
     callWithIpcGetPreviousDirContent: () => ipcRenderer.invoke('chanel4'),
     callWithIpcGetNextDirContent: () => ipcRenderer.invoke('chanel5'),
+    callWithIpcAddSelectedDirToCurrentScope: (clickedDirName, justFiles) => ipcRenderer.invoke('chanel6', clickedDirName, justFiles),
 })
