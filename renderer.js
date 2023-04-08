@@ -331,6 +331,7 @@ dirsDiv.addEventListener('click', async (event) => {
         // if (!selectedDirs.includes(selectedLocPath)) {
             const justFiles = true;
             const currentScope = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
+            console.log(currentScope);
             for (let loc of currentScope) {
                 createAllLocObjects(filenamesDiv, loc.fileContent, loc.locPath);        
             }

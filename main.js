@@ -54,7 +54,7 @@ function getLocContent(newLocPath = null, justFiles = false) {
     let contentSeparated = [];
     
     if (locHistoryIndex == 0 && newLocPath == null) {
-        contentSeparated = {dirContent: addedRootDirs.dirContent, locPath: newLocPath};
+        contentSeparated = {dirContent: addedRootDirs.dirContent, fileContent: [], locPath: newLocPath};
         return contentSeparated;    
 
     } else {
