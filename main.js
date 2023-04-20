@@ -63,8 +63,13 @@ function getLocContent(newLocPath = null, justFiles = false) {
         if (justFiles) {
             for (let contentElement of contentMixed) {
                 try {
-                    if (fs.statSync(newLocPath+"\\"+contentElement).isFile()) {
-                        fileContent.push(contentElement);
+                    let contentElementFsObject = fs.statSync(newLocPath+"\\"+contentElement);
+
+                    if (contentElementFsObject.isFile()) {
+                        
+                        let fileBirthtime = contentElementFsObject.birthtimeMs;
+
+                        fileContent.push({filename: contentElement, fileBirthtime});
                     }
                 } catch (err) {}
             }
@@ -75,10 +80,15 @@ function getLocContent(newLocPath = null, justFiles = false) {
         } else {
             for (let contentElement of contentMixed) {
                 try {
-                    if (fs.statSync(newLocPath+"\\"+contentElement).isDirectory()) {
+                    let contentElementFsObject = fs.statSync(newLocPath+"\\"+contentElement);
+
+                    if (contentElementFsObject.isDirectory()) {
                         dirContent.push(contentElement);
-                    } else if (fs.statSync(newLocPath+"\\"+contentElement).isFile()) {
-                        fileContent.push(contentElement);
+                    } else if (contentElementFsObject.isFile()) {
+
+                        let fileBirthtime = contentElementFsObject.birthtimeMs;
+
+                        fileContent.push({filename: contentElement, fileBirthtime});
                     }
                 } catch (err) {}
             }
@@ -169,15 +179,11 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
         selectedLocPath += '\\' + clickedDirName;
     }   
     if (!currentScopeDirs.includes(selectedLocPath)) {
-        console.log('not includes');
         const locContent = getLocContent(selectedLocPath, justFiles);
         currentScope.push(locContent);
 
-        // createAllLocObjects(filenamesDiv, locContent.fileContent, selectedLocPath);
         currentScopeDirs.push(selectedLocPath);
     } else {
-        console.log('includes');
-        // removeDisplayedContent(selectedLocPath);         
         const locObjectToBeDeleted = currentScope.find(obj => obj.locPath == selectedLocPath);        
         const locObjectToBeDeletedIndex = currentScope.indexOf(locObjectToBeDeleted);
         currentScope.splice(locObjectToBeDeletedIndex, 1);
@@ -186,10 +192,6 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
         currentScopeDirs.splice(dirToBeDeletedIndex, 1);
         
     }
-    // console.log(currentScopeDirs);
-    // for (let loc of currentScope) {
-    //     console.log(loc.locPath);
-    // }
     console.log(currentScope);
     return currentScope;
 }

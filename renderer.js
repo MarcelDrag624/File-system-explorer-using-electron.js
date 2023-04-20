@@ -1,5 +1,6 @@
 const dirsDiv = document.getElementById('dirsDiv');
-const filenamesDiv = document.getElementById('filenamesDiv');
+const filenamesDiv = document.getElementById('filenamesDiv'); 
+const creationTimesDiv = document.getElementById('creationTimesDiv'); 
 const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
@@ -18,6 +19,7 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     if (targetsToBeDeleted == 'everything') {
         const dirsDivChildren = Array.from(dirsDiv.children);
         const filenamesDivChildren = Array.from(filenamesDiv.children);
+        const creationTimesDivChildren = Array.from(creationTimesDiv.children);
     
         for (let child of dirsDivChildren) {
             child.remove();
@@ -26,55 +28,56 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
         for (let child of filenamesDivChildren) {
             child.remove();
         }
+
+        for (let child of creationTimesDivChildren) {
+            child.remove();
+        }
     } else {
         let targetChildren = Array.from(targetsToBeDeleted.children);
 
         for (let child of targetChildren) {
             child.remove();
         }
-        // const selectorEncoded = encodeURIComponent(targetsToBeDeleted);
-        // const fileDivsToBeDeleted = document.getElementsByClassName(selectorEncoded);
-        // const fileDivsToBeDeletedArray = Array.from(fileDivsToBeDeleted);
-
-        // for (let fileDiv of fileDivsToBeDeletedArray) {
-        //     fileDiv.remove();
-        // }
     }
 }
 
-function encapsulatedCreateLocObject(objName, cssSelector, targetAttribute, targetDiv) {
-    const div = document.createElement('div');
-    div.innerText = objName;
-    const cssSelectorEncoded = encodeURIComponent(cssSelector);
-    div.setAttribute(targetAttribute, cssSelectorEncoded);
-    div.classList.add("locContentObject");
-    targetDiv.append(div);
+function createAllLocObjects(targetDiv, objNamesArray) {
+    for (let objName of objNamesArray) {
+        createLocObject(targetDiv, objName);
+    }
 }
 
-function createLocObject(targetDiv, objName, selectorString = null) {
+function createLocObject(targetDiv, objName) {
     if (locHistoryIndex > 0) {
         if (targetDiv == dirsDiv) {
-            const cssSelector = selectorString + '\\' + objName;
-            encapsulatedCreateLocObject(objName, cssSelector, "id", targetDiv);
+            encapsulatedCreateLocObject(objName, targetDiv);
         } else if (targetDiv == filenamesDiv) {
-            const cssSelector = selectorString;
-            encapsulatedCreateLocObject(objName, cssSelector, "class", targetDiv);
+            encapsulatedCreateLocObject(objName, targetDiv);
         }
     } else {
         if (targetDiv == dirsDiv) {
-            const cssSelector = objName;
-            encapsulatedCreateLocObject(objName, cssSelector, "id", targetDiv);
+            encapsulatedCreateLocObject(objName, targetDiv);
         } else if (targetDiv == filenamesDiv) {
-            const cssSelector = selectorString;
-            encapsulatedCreateLocObject(objName, cssSelector, "class", targetDiv);
+            encapsulatedCreateLocObject(objName, targetDiv);
         }
     }
 }
 
-function createAllLocObjects(targetDiv, objNamesArray, selectorString = null) {
-    for (let objName of objNamesArray) {
-        createLocObject(targetDiv, objName, selectorString);
+function encapsulatedCreateLocObject(objName, targetDiv) {
+    console.log(objName);
+    if (targetDiv == dirsDiv) {
+        const div = document.createElement('div');
+        div.innerText = objName;
+        targetDiv.append(div);
+    } else {
+        const filenameDiv = document.createElement('div');
+        const creationTimeDiv = document.createElement('div');
+        filenameDiv.innerText = objName.filename;
+        creationTimeDiv.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
+        targetDiv.append(filenameDiv);
+        creationTimesDiv.append(creationTimeDiv);
     }
+        
 }
 
 function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement = null) {
@@ -318,6 +321,7 @@ dirsDiv.addEventListener('click', async (event) => {
 
     if (event.ctrlKey && target !== event.currentTarget) {
         removeDisplayedContent(filenamesDiv);
+        removeDisplayedContent(creationTimesDiv);
 
         let selectedLocPath;
     
