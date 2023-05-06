@@ -5,6 +5,10 @@ const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
 const sortByFilenameDiv = document.getElementById('sortByFilename');
+const sortingBar = document.getElementById('sortingBar');
+const sortByFilename = document.getElementById('sortByFilename');
+const sortByCreationTime = document.getElementById('sortByCreationTime');
+
 
 let locHistoryIndex = 0;
 let locHistory = [];
@@ -64,7 +68,6 @@ function createLocObject(targetDiv, objName) {
 }
 
 function encapsulatedCreateLocObject(objName, targetDiv) {
-    console.log(objName);
     if (targetDiv == dirsDiv) {
         const div = document.createElement('div');
         div.innerText = objName;
@@ -76,8 +79,7 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         creationTimeDiv.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
         targetDiv.append(filenameDiv);
         creationTimesDiv.append(creationTimeDiv);
-    }
-        
+    }   
 }
 
 function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement = null) {
@@ -96,37 +98,6 @@ function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement =
         return newLocPath;
     }
 }
-
-// function navigationWithButtons() {
-//     if (locHistoryIndex > 0) {
-
-//         if (locHistoryIndex == locHistory.length) {
-//             addDirButton.disabled = true;
-//             backButton.disabled = false;
-//             forwardButton.disabled = true;
-
-//             const newLocPath = locHistory.join('\\');
-
-//             return newLocPath;
-
-//         } else {
-//             addDirButton.disabled = true;
-//             backButton.disabled = false;
-//             forwardButton.disabled = false;
-
-//             const newLocPath = buildLocPath('fromCopy');
-
-//             return newLocPath;
-//         }
-
-//     } else {
-//             addDirButton.disabled = false;
-//             backButton.disabled = true;
-//             forwardButton.disabled = false;
-
-//             return addedRootDirs;
-//     }
-// }
 
 function rememberScrollHeight() {
     scrollHistory.splice(locHistoryIndex, scrollHistory.length - locHistoryIndex);
@@ -174,7 +145,6 @@ async function sortingFileDivs() {
 
     } else {
         const filenameDivs = filenamesDiv.querySelectorAll('.locContentObject');
-
         alphabeticalSortingState = 0;
         
         for (filenameDiv of filenameDivs) {
@@ -238,10 +208,8 @@ dirsDiv.addEventListener('dblclick', async (event) => {
         const currentScope = acquiredData.currentScope;
         locHistoryIndex = locHistoryData.locHistoryIndex;
         
-        for (let loc of currentScope) {
-            createAllLocObjects(dirsDiv, loc.dirContent, loc.locPath);
-            createAllLocObjects(filenamesDiv, loc.fileContent, loc.locPath);    
-        }
+        createAllLocObjects(dirsDiv, currentScope.dirContent);
+        createAllLocObjects(filenamesDiv, currentScope.fileContent);
 
         // sortingFileDivs();
     }
@@ -252,37 +220,18 @@ backButton.addEventListener('click', async (event) => {
 
     removeDisplayedContent();
 
-    // locHistoryIndex -= 1;
-
-    // if (locHistoryIndex > 0) {
-    //     const newLocPath = navigationWithButtons();
     const acquiredData = await window.electronAPI.callWithIpcGetPreviousDirContent();
     const locHistoryData = acquiredData.locHistoryData;
     const currentScope = acquiredData.currentScope;
     locHistoryIndex = locHistoryData.locHistoryIndex;
 
         if (locHistoryIndex > 0) {
-            for (let loc of currentScope) {
-                createAllLocObjects(dirsDiv, loc.dirContent, loc.locPath);
-                createAllLocObjects(filenamesDiv, loc.fileContent, loc.locPath);    
-            }
+            createAllLocObjects(dirsDiv, currentScope.dirContent);
+            createAllLocObjects(filenamesDiv, currentScope.fileContent);  
+
         } else {
-            for (let loc of currentScope) {
-                createAllLocObjects(dirsDiv, loc.dirContent);
-            }
+            createAllLocObjects(dirsDiv, currentScope.dirContent);
         }
-
-    //     createAllLocObjects(dirsDiv, currentScope.dirContent, newLocPath);
-    //     createAllLocObjects(filenamesDiv, currentScope.fileContent, newLocPath);
-
-    //     selectedDirs = [newLocPath];
-    // } else {
-    //     const currentScope = navigationWithButtons();
-
-    //     createAllLocObjects(dirsDiv, currentScope.dirContent);
-
-    //     selectedDirs = [];
-    // }
 
     // sortingFileDivs();
 
@@ -294,20 +243,13 @@ forwardButton.addEventListener('click', async (event) => {
     
     removeDisplayedContent();
     
-    // locHistoryIndex += 1;
-
-    // const newLocPath = navigationWithButtons();
     const acquiredData = await window.electronAPI.callWithIpcGetNextDirContent();
     const locHistoryData = acquiredData.locHistoryData;
     const currentScope = acquiredData.currentScope;
     locHistoryIndex = locHistoryData.locHistoryIndex;
     
-    for (let loc of currentScope) {
-        createAllLocObjects(dirsDiv, loc.dirContent, loc.locPath);
-        createAllLocObjects(filenamesDiv, loc.fileContent, loc.locPath);        
-    }
-
-    // selectedDirs = [newLocPath];
+    createAllLocObjects(dirsDiv, currentScope.dirContent);
+    createAllLocObjects(filenamesDiv, currentScope.fileContent); 
 
     // sortingFileDivs();
 
@@ -325,43 +267,45 @@ dirsDiv.addEventListener('click', async (event) => {
 
         let selectedLocPath;
     
-        // if (locHistoryIndex == 0) {
-        //     selectedLocPath = target.innerText;
-        // } else {
-        //     selectedLocPath = buildLocPath('fromCopy');
-        //     selectedLocPath += '\\' + target.innerText;
-        // }   
+        const justFiles = true;
+        const currentScope = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
 
-        // if (!selectedDirs.includes(selectedLocPath)) {
-            const justFiles = true;
-            const currentScope = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
-            console.log(currentScope);
-            for (let loc of currentScope) {
-                createAllLocObjects(filenamesDiv, loc.fileContent, loc.locPath);        
-            }
-                //     selectedDirs.push(selectedLocPath);
-        // } else {
-        //     removeDisplayedContent(selectedLocPath);         
-        //     const selectedLocPathIndex = selectedDirs.indexOf(selectedLocPath);
-        //     selectedDirs.splice(selectedLocPathIndex, 1);
-        // }
+        createAllLocObjects(filenamesDiv, currentScope.fileContent);   
 
         // sortingFileDivs();
     }
 })
 
-sortByFilenameDiv.addEventListener('click', (event) => {
+// sortByFilenameDiv.addEventListener('click', (event) => {
+//     event.stopPropagation();
+//     const target = event.target;
+
+//     if (selectedDirs.length == 1) {
+//         if(alphabeticalSortingState == 1) {
+//             alphabeticalSortingState = 2;
+//         } else {
+//             alphabeticalSortingState += 2;   
+//         }
+//     } else if (selectedDirs.length > 1) {
+//         alphabeticalSortingState += 1;
+//     }
+//     sortingFileDivs();
+// })
+
+sortingBar.addEventListener('click', async () => {
     event.stopPropagation();
     const target = event.target;
 
-    if (selectedDirs.length == 1) {
-        if(alphabeticalSortingState == 1) {
-            alphabeticalSortingState = 2;
-        } else {
-            alphabeticalSortingState += 2;   
-        }
-    } else if (selectedDirs.length > 1) {
-        alphabeticalSortingState += 1;
-    }
-    sortingFileDivs();
+    removeDisplayedContent(filenamesDiv);
+    removeDisplayedContent(creationTimesDiv);
+
+    currentScope = await window.electronAPI.callWithIpcUpdateSortingTypeAndSort(target.id);
+
+    createAllLocObjects(filenamesDiv, currentScope.fileContent);   
+})
+
+window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicator1, indicator2) => {
+
+    sortByFilename.innerText = indicator1;
+    sortByCreationTime.innerText = indicator2;
 })
