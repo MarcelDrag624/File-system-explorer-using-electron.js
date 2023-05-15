@@ -6,7 +6,7 @@ let addedRootDirs = {dirContent: []};
 let locHistory = [];
 let locHistoryIndex = 0;
 let currentScopeDirs = [];
-let currentScope = [];
+let currentScope = {fileContent: []};
 let filenameSorting = 0;
 let creationTimeSorting = 0;
 let lastAccessTimeSorting = 0;
@@ -98,21 +98,25 @@ function updateSortingTypeAndSort(event, targetId) {
     if (targetId == 'sortByFilename') {
         if (currentScopeDirs.length == 1 && filenameSorting == 0) {
             creationTimeSorting = 0;
+            lastAccessTimeSorting = 0;
             filenameSorting += 2;
             console.log('1');
         } else {
             creationTimeSorting = 0;
+            lastAccessTimeSorting = 0;
             filenameSorting += 1; 
             console.log('2');   
         }
 
     } else if (targetId == 'sortByCreationTime') {
             filenameSorting = 0;
+            lastAccessTimeSorting = 0;
             creationTimeSorting += 1;   
             console.log('3'); 
 
     } else if (targetId == 'sortByLastAccessTime') {
         filenameSorting = 0;
+        creationTimeSorting = 0;
         lastAccessTimeSorting += 1;   
         console.log('3');         
 }
