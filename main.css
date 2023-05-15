@@ -75,17 +75,24 @@ body {
 }
 
 #filenamesDiv {
-  -webkit-box-flex: 3;
-      -ms-flex: 3;
-          flex: 3;
+  -webkit-box-flex: 4;
+      -ms-flex: 4;
+          flex: 4;
   background-color: blue;
 }
 
 #creationTimesDiv {
-  -webkit-box-flex: 5;
-      -ms-flex: 5;
-          flex: 5;
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
   background-color: yellow;
+}
+
+#lastAccessTimesDiv {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+  background-color: pink;
 }
 
 #notFilesDiv {
@@ -102,14 +109,20 @@ body {
 }
 
 #sortByFilename {
+  -webkit-box-flex: 4;
+      -ms-flex: 4;
+          flex: 4;
+}
+
+#sortByCreationTime {
   -webkit-box-flex: 3;
       -ms-flex: 3;
           flex: 3;
 }
 
-#sortByCreationTime {
-  -webkit-box-flex: 5;
-      -ms-flex: 5;
-          flex: 5;
+#sortByLastAccessTime {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
 }
 /*# sourceMappingURL=main.css.map */

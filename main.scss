@@ -55,13 +55,18 @@ body {
 }
 
 #filenamesDiv {
-    flex: 3;
+    flex: 4;
     background-color: blue;
 }
 
 #creationTimesDiv {
-    flex: 5;
+    flex: 3;
     background-color: yellow;
+}
+
+#lastAccessTimesDiv {
+    flex: 3;
+    background-color: pink;
 }
 
 #notFilesDiv {
@@ -74,9 +79,13 @@ body {
 }
 
 #sortByFilename {
-    flex: 3;
+    flex: 4;
 }
 
 #sortByCreationTime {
-    flex: 5;
+    flex: 3;
+}
+
+#sortByLastAccessTime {
+    flex: 3;
 }
