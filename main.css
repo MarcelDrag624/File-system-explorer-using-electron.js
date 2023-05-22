@@ -30,6 +30,38 @@ body {
 
 #dirsDiv {
   overflow: auto;
+  -webkit-box-flex: 7;
+      -ms-flex: 7;
+          flex: 7;
+}
+
+#currentScopeDiv {
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
+  background-color: gold;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-line-pack: start;
+      align-content: start;
+}
+
+.dirInScope1 {
+  color: #c9c9c9;
+  background-color: white;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 4px;
+  padding: 4px;
+  border: 2px solid black;
+  border-radius: 5em;
 }
 
 .locContentObject {
@@ -66,7 +98,6 @@ body {
           flex: 2;
   background-color: orange;
   overflow: auto;
-  overflow-wrap: anywhere;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -79,19 +110,20 @@ body {
       -ms-flex: 4;
           flex: 4;
   background-color: blue;
+  overflow: hidden;
 }
 
 #creationTimesDiv {
-  -webkit-box-flex: 3;
-      -ms-flex: 3;
-          flex: 3;
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
   background-color: yellow;
 }
 
 #lastAccessTimesDiv {
-  -webkit-box-flex: 3;
-      -ms-flex: 3;
-          flex: 3;
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
   background-color: pink;
 }
 
@@ -115,14 +147,20 @@ body {
 }
 
 #sortByCreationTime {
-  -webkit-box-flex: 3;
-      -ms-flex: 3;
-          flex: 3;
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
 }
 
 #sortByLastAccessTime {
-  -webkit-box-flex: 3;
-      -ms-flex: 3;
-          flex: 3;
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
+}
+
+.filenameDiv {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /*# sourceMappingURL=main.css.map */

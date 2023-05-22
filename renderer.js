@@ -85,6 +85,7 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         const creationTimeDiv = document.createElement('div');
         const lastAccessTimeDiv = document.createElement('div');
         filenameDiv.innerText = objName.filename;
+        filenameDiv.classList.add('filenameDiv');
         creationTimeDiv.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
         lastAccessTimeDiv.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
         targetDiv.append(filenameDiv);

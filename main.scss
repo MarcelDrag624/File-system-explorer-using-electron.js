@@ -26,6 +26,26 @@ body {
 #dirsDiv {
     // flex: 19;
     overflow: auto;
+    flex: 7;
+}
+
+#currentScopeDiv {
+    flex: 2;
+    background-color: gold;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: start;
+}
+
+.dirInScope1 {
+    color: rgb(201, 201, 201);
+    background-color: white;
+    height: fit-content;
+    width: fit-content;
+    margin: 4px;
+    padding: 4px;
+    border: 2px solid black;
+    border-radius: 5em;
 }
 
 .locContentObject {
@@ -49,23 +69,26 @@ body {
     flex: 2;
     background-color: orange;
     overflow: auto;
-    overflow-wrap: anywhere;
+    // overflow-wrap: anywhere;
     display: flex;
     flex-wrap: wrap;
+    // overflow-y: scroll;
 }
 
 #filenamesDiv {
     flex: 4;
     background-color: blue;
+    overflow: hidden;
+    // white-space: nowrap;
 }
 
 #creationTimesDiv {
-    flex: 3;
+    flex: 2;
     background-color: yellow;
 }
 
 #lastAccessTimesDiv {
-    flex: 3;
+    flex: 2;
     background-color: pink;
 }
 
@@ -83,9 +106,16 @@ body {
 }
 
 #sortByCreationTime {
-    flex: 3;
+    flex: 2;
 }
 
 #sortByLastAccessTime {
-    flex: 3;
+    flex: 2;
+}
+
+.filenameDiv {
+    // background-color: red;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
