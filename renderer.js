@@ -78,17 +78,24 @@ function createLocObject(targetDiv, objName) {
 function encapsulatedCreateLocObject(objName, targetDiv) {
     if (targetDiv == dirsDiv) {
         const div = document.createElement('div');
+
         div.innerText = objName;
-        targetDiv.append(div);
+        
+        dirsDiv.append(div);
+
     } else {
         const filenameDiv = document.createElement('div');
         const creationTimeDiv = document.createElement('div');
         const lastAccessTimeDiv = document.createElement('div');
+
         filenameDiv.innerText = objName.filename;
         filenameDiv.classList.add('filenameDiv');
+
         creationTimeDiv.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
+
         lastAccessTimeDiv.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
-        targetDiv.append(filenameDiv);
+
+        filenamesDiv.append(filenameDiv);
         creationTimesDiv.append(creationTimeDiv);
         lastAccessTimesDiv.append(lastAccessTimeDiv);
     }   
@@ -119,24 +126,6 @@ function rememberScrollHeight() {
 function remindScrollHeight() {
     dirsDiv.scrollTop = scrollHistory[locHistoryIndex];
 }
-
-// async function sortingFileDivs() {
-//     if (selectedDirs.length == 1) {
-//         if (alphabeticalSortingState == 0) {
-//             // bez sortowania (kolejnosc plikow zgodna z kolejnoscia zaznaczania folderow)
-//         } else if (alphabeticalSortingState == 1) {
-//             // odwrotnie alfabetycznie
-//         }
-//     } else if (selectedDirs.length > 1) {
-//         if (alphabeticalSortingState == 0) {
-//             // bez sortowania (kolejnosc plikow zgodna z kolejnoscia zaznaczania folderow)            
-//         } else if (alphabeticalSortingState == 1) {
-//             // alfabetycznie
-//         } else if (alphabeticalSortingState == 2) {
-//             // odwrotnie alfabetycznie            
-//         }
-//     }
-// }
 
 async function sortingFileDivs() {
     if (alphabeticalSortingState == 1) {
@@ -183,14 +172,11 @@ window.electronAPI.callWithIpcUpdateNavigationMode((event, locHistoryIndex, locH
             addDirButton.disabled = true;
             backButton.disabled = false;
             forwardButton.disabled = false;
-
         }
-
     } else {
             addDirButton.disabled = false;
             backButton.disabled = true;
             forwardButton.disabled = false;
-
     }
 })
 
@@ -222,8 +208,6 @@ dirsDiv.addEventListener('dblclick', async (event) => {
         
         createAllLocObjects(dirsDiv, currentScope.dirContent);
         createAllLocObjects(filenamesDiv, currentScope.fileContent);
-
-        // sortingFileDivs();
     }
 })
 
@@ -244,9 +228,6 @@ backButton.addEventListener('click', async (event) => {
         } else {
             createAllLocObjects(dirsDiv, currentScope.dirContent);
         }
-
-    // sortingFileDivs();
-
     remindScrollHeight();
 })
 
@@ -262,8 +243,6 @@ forwardButton.addEventListener('click', async (event) => {
     
     createAllLocObjects(dirsDiv, currentScope.dirContent);
     createAllLocObjects(filenamesDiv, currentScope.fileContent); 
-
-    // sortingFileDivs();
 
     remindScrollHeight();
 })
@@ -284,26 +263,8 @@ dirsDiv.addEventListener('click', async (event) => {
         const currentScope = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
 
         createAllLocObjects(filenamesDiv, currentScope.fileContent);   
-
-        // sortingFileDivs();
     }
 })
-
-// sortByFilenameDiv.addEventListener('click', (event) => {
-//     event.stopPropagation();
-//     const target = event.target;
-
-//     if (selectedDirs.length == 1) {
-//         if(alphabeticalSortingState == 1) {
-//             alphabeticalSortingState = 2;
-//         } else {
-//             alphabeticalSortingState += 2;   
-//         }
-//     } else if (selectedDirs.length > 1) {
-//         alphabeticalSortingState += 1;
-//     }
-//     sortingFileDivs();
-// })
 
 sortingBar.addEventListener('click', async () => {
     event.stopPropagation();

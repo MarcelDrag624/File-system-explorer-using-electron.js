@@ -33,7 +33,7 @@ async function getRootDirs() {
     }
 }
 
-function sortDisplayedData(targetId) {
+function sortDisplayedData() {
         if (filenameSorting == 1) {
             mainWindow.webContents.send('chanel8', 'Filename (a-z)', 'Creation time', 'Last access time');
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
@@ -90,8 +90,6 @@ function sortDisplayedData(targetId) {
                 return file1OriginIndex - file2OriginIndex;
             });
         }
-
-    return currentScope
 }
 
 function updateSortingTypeAndSort(event, targetId) {
@@ -121,7 +119,7 @@ function updateSortingTypeAndSort(event, targetId) {
         console.log('3');         
 }
     
-    currentScope = sortDisplayedData(targetId);
+    sortDisplayedData();
 
     return currentScope
 }
@@ -223,7 +221,6 @@ function getClickedDirContent(event, clickedDirName) {
     const locContent = getLocContent(newLocPath);
     currentScope = locContent;
     sortDisplayedData();
-    // console.log(currentScope);
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
     dataToBeTransferred = {locHistoryData, currentScope};
     return dataToBeTransferred;
@@ -283,7 +280,6 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
     }   
     if (!currentScopeDirs.includes(selectedLocPath)) {
         const locContent = getLocContent(selectedLocPath, justFiles);
-        console.log(locContent);
 
         for (let file of locContent.fileContent) {
             currentScope.fileContent.push(file);
@@ -302,9 +298,6 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
         currentScopeDirs.splice(dirToBeDeletedIndex, 1);        
     }
     sortDisplayedData();
-    // currentScope.fileContent.sort((a,b) => a.fileBirthtime - b.fileBirthtime);
-    // currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
-    // console.log(currentScope);
 
     return currentScope;
 }
