@@ -257,10 +257,13 @@ dirsDiv.addEventListener('click', async (event) => {
         removeDisplayedContent(creationTimesDiv);
         removeDisplayedContent(lastAccessTimesDiv);
 
-        let selectedLocPath;
+        // let selectedLocPath;
     
         const justFiles = true;
-        const currentScope = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
+        const receivedData = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
+        const currentScope = receivedData.currentScope;
+        const selectedDirPath = receivedData.selectedLocPath;
+        console.log(selectedDirPath);
 
         createAllLocObjects(filenamesDiv, currentScope.fileContent);   
     }

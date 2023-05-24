@@ -121,7 +121,7 @@ function updateSortingTypeAndSort(event, targetId) {
     
     sortDisplayedData();
 
-    return currentScope
+    return currentScope;
 }
 
 function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement = null) {
@@ -148,8 +148,8 @@ function getLocContent(newLocPath = null, justFiles = false) {
     let contentSeparated = [];
     
     if (locHistoryIndex == 0 && newLocPath == null) {
-        contentSeparated = {dirContent: addedRootDirs.dirContent, fileContent: [], locPath: newLocPath};
-        return contentSeparated;    
+        // contentSeparated = {dirContent: addedRootDirs.dirContent, fileContent: [], locPath: newLocPath};
+        return {dirContent: addedRootDirs.dirContent, fileContent: [], locPath: newLocPath};    
 
     } else {
         contentMixed = fs.readdirSync(newLocPath);
@@ -170,8 +170,8 @@ function getLocContent(newLocPath = null, justFiles = false) {
                 } catch (err) {}
             }
     
-            contentSeparated = {dirContent, fileContent, locPath: newLocPath};
-            return contentSeparated;
+            // contentSeparated = {dirContent, fileContent, locPath: newLocPath};
+            return {dirContent, fileContent, locPath: newLocPath};
             
         } else {
             for (let contentElement of contentMixed) {
@@ -191,8 +191,8 @@ function getLocContent(newLocPath = null, justFiles = false) {
                 } catch (err) {}
             }
     
-            contentSeparated = {dirContent, fileContent};
-            return contentSeparated;
+            // contentSeparated = {dirContent, fileContent};
+            return {dirContent, fileContent};
         }
     }
 }
@@ -222,8 +222,8 @@ function getClickedDirContent(event, clickedDirName) {
     currentScope = locContent;
     sortDisplayedData();
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-    dataToBeTransferred = {locHistoryData, currentScope};
-    return dataToBeTransferred;
+    // dataToBeSent = {locHistoryData, currentScope};
+    return {locHistoryData, currentScope};
 }
 
 function getPreviousDirContent(event) {
@@ -243,8 +243,8 @@ function getPreviousDirContent(event) {
     currentScope = locContent;
     sortDisplayedData();
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-    dataToBeTransferred = {locHistoryData, currentScope};
-    return dataToBeTransferred;
+    // dataToBeSent = {locHistoryData, currentScope};
+    return {locHistoryData, currentScope};
 }
 
 function getNextDirContent(event) {
@@ -265,8 +265,8 @@ function getNextDirContent(event) {
     currentScope = locContent;
     sortDisplayedData();
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-    dataToBeTransferred = {locHistoryData, currentScope};
-    return dataToBeTransferred;
+    // dataToBeSent = {locHistoryData, currentScope};
+    return {locHistoryData, currentScope};
 }
 
 function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
@@ -299,7 +299,7 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
     }
     sortDisplayedData();
 
-    return currentScope;
+    return {currentScope, selectedLocPath};
 }
 
 app.whenReady().then(() => {
