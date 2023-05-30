@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    font-family: Helvetica;
 }
 
 #app {
@@ -97,7 +98,7 @@ body {
     background-color: black;
 }
 
-#sortingBar {
+.bar {
     display: flex;
 }
 

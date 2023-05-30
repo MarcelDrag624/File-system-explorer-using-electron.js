@@ -23,6 +23,7 @@ function createWindow() {
 async function getRootDirs() {
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory']});
     if (canceled) {
+        
         return;
     } else {
         if (filePaths[0] != null && !addedRootDirs.dirContent.includes(filePaths[0])) {
@@ -35,58 +36,107 @@ async function getRootDirs() {
 
 function sortDisplayedData() {
         if (filenameSorting == 1) {
-            mainWindow.webContents.send('chanel8', 'Filename (a-z)', 'Creation time', 'Last access time');
+            // mainWindow.webContents.send('chanel8', 'Filename (a-z)', 'Creation time', 'Last access time');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename (a-z)', textWeight: 1000},
+                creationTime: {innerText: 'Creation time', textWeight: 100},
+                lastAccessTime: {innerText: 'Last access time', textWeight: 100}
+            });
+
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
 
         } else if (filenameSorting == 2) {
-            mainWindow.webContents.send('chanel8', 'Filename (z-a)', 'Creation time', 'Last access time');
+            // mainWindow.webContents.send('chanel8', 'Filename (z-a)', 'Creation time', 'Last access time');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename (z-a)', textWeight: 1000},
+                creationTime: {innerText: 'Creation time', textWeight: 100},
+                lastAccessTime: {innerText: 'Last access time', textWeight: 100}
+        });
             currentScope.fileContent.sort((a,b) => b.filename.localeCompare(a.filename));
 
         } else if (filenameSorting == 3) {
-            mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time');
+            // mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename', textWeight: 100},
+                creationTime: {innerText: 'Creation time', textWeight: 100},
+                lastAccessTime: {innerText: 'Last access time', textWeight: 100}
+        });
             filenameSorting = 0; 
             
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
             currentScope.fileContent.sort((a,b) => {
                 const file1OriginIndex = currentScopeDirs.indexOf(a.origin);
                 const file2OriginIndex = currentScopeDirs.indexOf(b.origin);
+                
                 return file1OriginIndex - file2OriginIndex;
             });
 
         } else if (creationTimeSorting == 1) {
-            mainWindow.webContents.send('chanel8', 'Filename', 'Creation time (↑)', 'Last access time');
+            // mainWindow.webContents.send('chanel8', 'Filename', 'Creation time (↑)', 'Last access time');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename', textWeight: 100},
+                creationTime: {innerText: 'Creation time (↑)', textWeight: 1000},
+                lastAccessTime: {innerText: 'Last access time', textWeight: 100}
+        });
             currentScope.fileContent.sort((a,b) => a.fileBirthtime - b.fileBirthtime);
 
         } else if (creationTimeSorting == 2) {
-            mainWindow.webContents.send('chanel8', 'Filename', 'Creation time (↓)', 'Last access time');
+            // mainWindow.webContents.send('chanel8', 'Filename', 'Creation time (↓)', 'Last access time');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename', textWeight: 100},
+                creationTime: {innerText: 'Creation time (↓)', textWeight: 1000},
+                lastAccessTime: {innerText: 'Last access time', textWeight: 100}
+        });
             currentScope.fileContent.sort((a,b) => b.fileBirthtime - a.fileBirthtime);
 
         } else if (creationTimeSorting == 3) {
-            mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time');
+            // mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename', textWeight: 100},
+                creationTime: {innerText: 'Creation time', textWeight: 100},
+                lastAccessTime: {innerText: 'Last access time', textWeight: 100}
+        });
             creationTimeSorting = 0; 
             
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
             currentScope.fileContent.sort((a,b) => {
                 const file1OriginIndex = currentScopeDirs.indexOf(a.origin);
                 const file2OriginIndex = currentScopeDirs.indexOf(b.origin);
+                
                 return file1OriginIndex - file2OriginIndex;
             });
         } else if (lastAccessTimeSorting == 1) {
-            mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time (↑)');
+            // mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time (↑)');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename', textWeight: 100},
+                creationTime: {innerText: 'Creation time', textWeight: 100},
+                lastAccessTime: {innerText: 'Last access time (↑)', textWeight: 1000}
+        });
             currentScope.fileContent.sort((a,b) => a.fileLastAccessTime - b.fileLastAccessTime);
 
         } else if (lastAccessTimeSorting == 2) {
-            mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time (↓)');
+            // mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time (↓)');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename', textWeight: 100},
+                creationTime: {innerText: 'Creation time', textWeight: 100},
+                lastAccessTime: {innerText: 'Last access time (↓)', textWeight: 1000}
+        });
             currentScope.fileContent.sort((a,b) => b.fileLastAccessTime - a.fileLastAccessTime);
 
         } else if (lastAccessTimeSorting == 3) {
-            mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time');
+            // mainWindow.webContents.send('chanel8', 'Filename', 'Creation time', 'Last access time');
+            mainWindow.webContents.send('chanel8', {
+                filename: {innerText: 'Filename', textWeight: 100},
+                creationTime: {innerText: 'Creation time', textWeight: 100},
+                lastAccessTime: {innerText: 'Last access time', textWeight: 100}
+        });
             lastAccessTimeSorting = 0; 
             
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
             currentScope.fileContent.sort((a,b) => {
                 const file1OriginIndex = currentScopeDirs.indexOf(a.origin);
                 const file2OriginIndex = currentScopeDirs.indexOf(b.origin);
+                
                 return file1OriginIndex - file2OriginIndex;
             });
         }
@@ -118,7 +168,6 @@ function updateSortingTypeAndSort(event, targetId) {
         lastAccessTimeSorting += 1;   
         console.log('3');         
 }
-    
     sortDisplayedData();
 
     return currentScope;
@@ -128,6 +177,7 @@ function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement =
     if (useOriginalLocHistoryOrCopy == 'fromCopy') {
         let locHistoryCopy = [...locHistory];
         locHistoryCopy.splice(locHistoryIndex, locHistoryCopy.length - locHistoryIndex);
+        
         const newLocPath = locHistoryCopy.join('\\');
     
         return newLocPath;
@@ -135,6 +185,7 @@ function buildLocPath(useOriginalLocHistoryOrCopy = 'fromOriginal', newElement =
     } else if (useOriginalLocHistoryOrCopy == 'fromOriginal') {
         locHistory.splice(locHistoryIndex, locHistory.length - locHistoryIndex);
         locHistory.push(newElement);
+        
         const newLocPath = locHistory.join('\\');
 
         return newLocPath;
@@ -145,10 +196,8 @@ function getLocContent(newLocPath = null, justFiles = false) {
 
     let dirContent = [];
     let fileContent = [];
-    let contentSeparated = [];
     
     if (locHistoryIndex == 0 && newLocPath == null) {
-        // contentSeparated = {dirContent: addedRootDirs.dirContent, fileContent: [], locPath: newLocPath};
         return {dirContent: addedRootDirs.dirContent, fileContent: [], locPath: newLocPath};    
 
     } else {
@@ -165,12 +214,11 @@ function getLocContent(newLocPath = null, justFiles = false) {
 
                         let fileLastAccessTime = contentElementFsObject.atimeMs;
 
-                        fileContent.push({filename: contentElement, fileBirthtime, fileLastAccessTime, origin: newLocPath});
+                        fileContent.push({filename: contentElement, fileBirthtime, fileLastAccessTime, parentPath: newLocPath});
                     }
                 } catch (err) {}
             }
     
-            // contentSeparated = {dirContent, fileContent, locPath: newLocPath};
             return {dirContent, fileContent, locPath: newLocPath};
             
         } else {
@@ -186,12 +234,11 @@ function getLocContent(newLocPath = null, justFiles = false) {
 
                         let fileLastAccessTime = contentElementFsObject.atimeMs;
 
-                        fileContent.push({filename: contentElement, fileBirthtime, fileLastAccessTime, origin: newLocPath});
+                        fileContent.push({filename: contentElement, fileBirthtime, fileLastAccessTime, parentPath: newLocPath});
                     }
                 } catch (err) {}
             }
     
-            // contentSeparated = {dirContent, fileContent};
             return {dirContent, fileContent};
         }
     }
@@ -220,13 +267,15 @@ function getClickedDirContent(event, clickedDirName) {
     }
     const locContent = getLocContent(newLocPath);
     currentScope = locContent;
-    sortDisplayedData();
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-    // dataToBeSent = {locHistoryData, currentScope};
-    return {locHistoryData, currentScope};
+
+    sortDisplayedData();
+
+    return {locHistoryData, currentScope, newLocPath};
 }
 
 function getPreviousDirContent(event) {
+    let newLocPath;
     let locContent;
     locHistoryIndex -= 1;
     mainWindow.webContents.send('chanel3', locHistoryIndex, locHistory.length);
@@ -241,10 +290,11 @@ function getPreviousDirContent(event) {
         locContent = getLocContent();
     }
     currentScope = locContent;
-    sortDisplayedData();
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-    // dataToBeSent = {locHistoryData, currentScope};
-    return {locHistoryData, currentScope};
+
+    sortDisplayedData();
+
+    return {locHistoryData, currentScope, newLocPath};
 }
 
 function getNextDirContent(event) {
@@ -263,10 +313,11 @@ function getNextDirContent(event) {
 
     const locContent = getLocContent(newLocPath);
     currentScope = locContent;
-    sortDisplayedData();
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
-    // dataToBeSent = {locHistoryData, currentScope};
-    return {locHistoryData, currentScope};
+
+    sortDisplayedData();    
+
+    return {locHistoryData, currentScope, newLocPath};
 }
 
 function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {

@@ -6,7 +6,7 @@ const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
 const sortByFilenameDiv = document.getElementById('sortByFilename');
-const sortingBar = document.getElementById('sortingBar');
+const sortingBar = document.querySelector('.bar');
 const sortByFilename = document.getElementById('sortByFilename');
 const sortByCreationTime = document.getElementById('sortByCreationTime');
 const sortByLastAccessTime = document.getElementById('sortByLastAccessTime');
@@ -239,7 +239,10 @@ forwardButton.addEventListener('click', async (event) => {
     const acquiredData = await window.electronAPI.callWithIpcGetNextDirContent();
     const locHistoryData = acquiredData.locHistoryData;
     const currentScope = acquiredData.currentScope;
+    const newLocPath = acquiredData.newLocPath;
     locHistoryIndex = locHistoryData.locHistoryIndex;
+
+    console.log(newLocPath);
     
     createAllLocObjects(dirsDiv, currentScope.dirContent);
     createAllLocObjects(filenamesDiv, currentScope.fileContent); 
@@ -282,9 +285,15 @@ sortingBar.addEventListener('click', async () => {
     createAllLocObjects(filenamesDiv, currentScope.fileContent);   
 })
 
-window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicator1, indicator2, indicator3) => {
+window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
 
-    sortByFilename.innerText = indicator1;
-    sortByCreationTime.innerText = indicator2;
-    sortByLastAccessTime.innerText = indicator3;
+    // console.log(indicatorsObj)
+    sortByFilename.innerText = indicatorsObj.filename.innerText;
+    sortByFilename.style.fontWeight = indicatorsObj.filename.textWeight;
+
+    sortByCreationTime.innerText = indicatorsObj.creationTime.innerText;
+    sortByCreationTime.style.fontWeight = indicatorsObj.creationTime.textWeight;
+
+    sortByLastAccessTime.innerText = indicatorsObj.lastAccessTime.innerText;
+    sortByLastAccessTime.style.fontWeight = indicatorsObj.lastAccessTime.textWeight;
 })
