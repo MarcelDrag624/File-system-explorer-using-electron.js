@@ -65,8 +65,8 @@ function sortDisplayedData() {
             
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
             currentScope.fileContent.sort((a,b) => {
-                const file1OriginIndex = currentScopeDirs.indexOf(a.origin);
-                const file2OriginIndex = currentScopeDirs.indexOf(b.origin);
+                const file1OriginIndex = currentScopeDirs.indexOf(a.parentPath);
+                const file2OriginIndex = currentScopeDirs.indexOf(b.parentPath);
                 
                 return file1OriginIndex - file2OriginIndex;
             });
@@ -100,8 +100,8 @@ function sortDisplayedData() {
             
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
             currentScope.fileContent.sort((a,b) => {
-                const file1OriginIndex = currentScopeDirs.indexOf(a.origin);
-                const file2OriginIndex = currentScopeDirs.indexOf(b.origin);
+                const file1OriginIndex = currentScopeDirs.indexOf(a.parentPath);
+                const file2OriginIndex = currentScopeDirs.indexOf(b.parentPath);
                 
                 return file1OriginIndex - file2OriginIndex;
             });
@@ -134,8 +134,8 @@ function sortDisplayedData() {
             
             currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
             currentScope.fileContent.sort((a,b) => {
-                const file1OriginIndex = currentScopeDirs.indexOf(a.origin);
-                const file2OriginIndex = currentScopeDirs.indexOf(b.origin);
+                const file1OriginIndex = currentScopeDirs.indexOf(a.parentPath);
+                const file2OriginIndex = currentScopeDirs.indexOf(b.parentPath);
                 
                 return file1OriginIndex - file2OriginIndex;
             });
@@ -341,7 +341,7 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
     } else {
 
         for (let i = currentScope.fileContent.length - 1; i > -1; i--) {
-            if (currentScope.fileContent[i].origin == selectedLocPath) {
+            if (currentScope.fileContent[i].parentPath == selectedLocPath) {
                 currentScope.fileContent.splice(i, 1);    
             }
         }
