@@ -9,4 +9,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     callWithIpcAddSelectedDirToCurrentScope: (clickedDirName, justFiles) => ipcRenderer.invoke('chanel6', clickedDirName, justFiles),
     callWithIpcUpdateSortingTypeAndSort: (targetId) => ipcRenderer.invoke('chanel7', targetId),
     callWithIpcUpdateSortingIndicator: (indicatorsObj) => ipcRenderer.on('chanel8', indicatorsObj),
+    getCurrentScopeDirs: (currentScopeDirs) => ipcRenderer.on('chanel9', currentScopeDirs),
 })

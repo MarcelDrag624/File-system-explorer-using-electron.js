@@ -10,7 +10,7 @@ const sortingBar = document.querySelector('.bar');
 const sortByFilename = document.getElementById('sortByFilename');
 const sortByCreationTime = document.getElementById('sortByCreationTime');
 const sortByLastAccessTime = document.getElementById('sortByLastAccessTime');
-
+const currentScopeMonitor = document.getElementById('currentScopeMonitor');
 
 let locHistoryIndex = 0;
 let locHistory = [];
@@ -241,8 +241,6 @@ forwardButton.addEventListener('click', async (event) => {
     const currentScope = acquiredData.currentScope;
     const newLocPath = acquiredData.newLocPath;
     locHistoryIndex = locHistoryData.locHistoryIndex;
-
-    console.log(newLocPath);
     
     createAllLocObjects(dirsDiv, currentScope.dirContent);
     createAllLocObjects(filenamesDiv, currentScope.fileContent); 
@@ -266,7 +264,6 @@ dirsDiv.addEventListener('click', async (event) => {
         const receivedData = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
         const currentScope = receivedData.currentScope;
         const selectedDirPath = receivedData.selectedLocPath;
-        console.log(selectedDirPath);
 
         createAllLocObjects(filenamesDiv, currentScope.fileContent);   
     }
@@ -296,4 +293,15 @@ window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
 
     sortByLastAccessTime.innerText = indicatorsObj.lastAccessTime.innerText;
     sortByLastAccessTime.style.fontWeight = indicatorsObj.lastAccessTime.textWeight;
+})
+
+window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
+    
+    removeDisplayedContent(currentScopeMonitor);
+
+    for (let dir of currentScopeDirs) {
+        const currentScopeDir = document.createElement('div');
+        currentScopeDir.innerText = dir;
+        currentScopeMonitor.append(currentScopeDir);
+    }
 })

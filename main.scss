@@ -30,12 +30,13 @@ body {
     flex: 7;
 }
 
-#currentScopeDiv {
+#currentScopeMonitor {
     flex: 2;
     background-color: gold;
     display: flex;
     flex-wrap: wrap;
-    align-content: start;
+    // align-content: start;
+    flex-direction: column;
 }
 
 .dirInScope1 {

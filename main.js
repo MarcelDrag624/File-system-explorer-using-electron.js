@@ -271,6 +271,8 @@ function getClickedDirContent(event, clickedDirName) {
 
     sortDisplayedData();
 
+    mainWindow.webContents.send('chanel9', currentScopeDirs);
+
     return {locHistoryData, currentScope, newLocPath};
 }
 
@@ -294,6 +296,8 @@ function getPreviousDirContent(event) {
 
     sortDisplayedData();
 
+    mainWindow.webContents.send('chanel9', currentScopeDirs);
+
     return {locHistoryData, currentScope, newLocPath};
 }
 
@@ -315,7 +319,9 @@ function getNextDirContent(event) {
     currentScope = locContent;
     locHistoryData = {locHistoryIndex, locHistoryLength: locHistory.length};
 
-    sortDisplayedData();    
+    sortDisplayedData();  
+    
+    mainWindow.webContents.send('chanel9', currentScopeDirs);
 
     return {locHistoryData, currentScope, newLocPath};
 }
@@ -349,6 +355,9 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
         currentScopeDirs.splice(dirToBeDeletedIndex, 1);        
     }
     sortDisplayedData();
+
+    console.log(currentScopeDirs);
+    mainWindow.webContents.send('chanel9', currentScopeDirs);
 
     return {currentScope, selectedLocPath};
 }
