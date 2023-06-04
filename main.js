@@ -6,6 +6,7 @@ let addedRootDirs = {dirContent: []};
 let locHistory = [];
 let locHistoryIndex = 0;
 let currentScopeDirs = [];
+let currentScopeDirsShort = [];
 let currentScope = {fileContent: []};
 let filenameSorting = 0;
 let creationTimeSorting = 0;
@@ -252,6 +253,7 @@ function getClickedDirContent(event, clickedDirName) {
         locHistory = [];
         newLocPath = clickedDirName;
         currentScopeDirs = [clickedDirName];
+        currentScopeDirsShort = [clickedDirName];
 
         locHistory.push(clickedDirName);
 
@@ -262,6 +264,7 @@ function getClickedDirContent(event, clickedDirName) {
 
         locHistoryIndex += 1;
         currentScopeDirs = [clickedDirName];
+        currentScopeDirsShort = [clickedDirName];
 
         mainWindow.webContents.send('chanel3', locHistoryIndex, locHistory.length);
     }
@@ -271,8 +274,8 @@ function getClickedDirContent(event, clickedDirName) {
 
     sortDisplayedData();
 
-    mainWindow.webContents.send('chanel9', currentScopeDirs);
-
+    mainWindow.webContents.send('chanel9', currentScopeDirsShort);
+    console.log(locHistory, locHistoryIndex);
     return {locHistoryData, currentScope, newLocPath};
 }
 
@@ -285,10 +288,12 @@ function getPreviousDirContent(event) {
     if (locHistoryIndex > 0) {
         newLocPath = buildLocPath('fromCopy');
         currentScopeDirs = [newLocPath];
+        currentScopeDirsShort = [locHistory[locHistoryIndex-1]];
         locContent = getLocContent(newLocPath);
 
     } else {
         currentScopeDirs = [];
+        currentScopeDirsShort = [];
         locContent = getLocContent();
     }
     currentScope = locContent;
@@ -296,7 +301,7 @@ function getPreviousDirContent(event) {
 
     sortDisplayedData();
 
-    mainWindow.webContents.send('chanel9', currentScopeDirs);
+    mainWindow.webContents.send('chanel9', currentScopeDirsShort);
 
     return {locHistoryData, currentScope, newLocPath};
 }
@@ -314,6 +319,7 @@ function getNextDirContent(event) {
 
     }
     currentScopeDirs = [newLocPath];
+    currentScopeDirsShort = [locHistory[locHistoryIndex-1]];
 
     const locContent = getLocContent(newLocPath);
     currentScope = locContent;
@@ -321,7 +327,7 @@ function getNextDirContent(event) {
 
     sortDisplayedData();  
     
-    mainWindow.webContents.send('chanel9', currentScopeDirs);
+    mainWindow.webContents.send('chanel9', currentScopeDirsShort);
 
     return {locHistoryData, currentScope, newLocPath};
 }
@@ -343,6 +349,7 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
         }
 
         currentScopeDirs.push(selectedLocPath);
+        currentScopeDirsShort.push(clickedDirName);
 
     } else {
 
@@ -351,13 +358,16 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
                 currentScope.fileContent.splice(i, 1);    
             }
         }
-        const dirToBeDeletedIndex = currentScopeDirs.indexOf(selectedLocPath);
-        currentScopeDirs.splice(dirToBeDeletedIndex, 1);        
+        let dirToBeDeletedIndex = currentScopeDirs.indexOf(selectedLocPath);
+        currentScopeDirs.splice(dirToBeDeletedIndex, 1);    
+        
+        dirToBeDeletedIndex = currentScopeDirsShort.indexOf(clickedDirName);
+        currentScopeDirsShort.splice(dirToBeDeletedIndex, 1);  
     }
     sortDisplayedData();
 
     console.log(currentScopeDirs);
-    mainWindow.webContents.send('chanel9', currentScopeDirs);
+    mainWindow.webContents.send('chanel9', currentScopeDirsShort);
 
     return {currentScope, selectedLocPath};
 }
