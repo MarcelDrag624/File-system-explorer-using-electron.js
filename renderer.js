@@ -301,7 +301,8 @@ window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
 
     for (let dir of currentScopeDirs) {
         const currentScopeDir = document.createElement('div');
-        currentScopeDir.innerText = dir;
+        currentScopeDir.innerText = dir.name;
+        currentScopeDir.title = dir.path;
         currentScopeMonitor.append(currentScopeDir);
     }
 })
