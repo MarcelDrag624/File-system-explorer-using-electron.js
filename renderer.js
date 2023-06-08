@@ -11,6 +11,9 @@ const sortByFilename = document.getElementById('sortByFilename');
 const sortByCreationTime = document.getElementById('sortByCreationTime');
 const sortByLastAccessTime = document.getElementById('sortByLastAccessTime');
 const currentScopeMonitor = document.getElementById('currentScopeMonitor');
+const currentScopeDirnamesDiv = document.getElementById('currentScopeDirnamesDiv');
+const soloButtonsDiv = document.getElementById('soloButtonsDiv');
+const hideButtonsDiv = document.getElementById('hideButtonsDiv');
 
 let locHistoryIndex = 0;
 let locHistory = [];
@@ -80,6 +83,7 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         const div = document.createElement('div');
 
         div.innerText = objName;
+        div.classList.add('dirDiv');
         
         dirsDiv.append(div);
 
@@ -297,12 +301,15 @@ window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
 
 window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
     
-    removeDisplayedContent(currentScopeMonitor);
+    removeDisplayedContent(currentScopeDirnamesDiv);
+    removeDisplayedContent(soloButtonsDiv);
+    removeDisplayedContent(hideButtonsDiv);
 
     for (let dir of currentScopeDirs) {
         const currentScopeDir = document.createElement('div');
         currentScopeDir.innerText = dir.name;
         currentScopeDir.title = dir.path;
-        currentScopeMonitor.append(currentScopeDir);
+        currentScopeDir.classList.add('currentScopeDirnameDiv');
+        currentScopeDirnamesDiv.append(currentScopeDir);
     }
 })

@@ -24,30 +24,65 @@ body {
     // flex: 1;
 }
 
+#dirsDivParent {
+    overflow: auto;
+    // overflow-x: hidden;
+    flex: 7;
+    display: flex;
+    flex-wrap: wrap;
+}
+
 #dirsDiv {
     // flex: 19;
-    overflow: auto;
-    flex: 7;
+    flex: 1;
+    overflow-x: hidden;
+}
+
+.dirDiv {
+    background-color: antiquewhite;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+#tryIt {
+    flex: 1;
+    background-color: olive;
 }
 
 #currentScopeMonitor {
     flex: 2;
     background-color: gold;
     display: flex;
+    overflow: auto;
     flex-wrap: wrap;
-    // align-content: start;
-    flex-direction: column;
 }
 
-.dirInScope1 {
-    color: rgb(201, 201, 201);
-    background-color: white;
-    height: fit-content;
-    width: fit-content;
-    margin: 4px;
-    padding: 4px;
-    border: 2px solid black;
-    border-radius: 5em;
+#currentScopeDirnamesDiv {
+    flex: 3;
+    background-color: rgb(255, 29, 29);
+    overflow: hidden;
+    // white-space: nowrap; /* Prevent line breaks */
+    // overflow: hidden; /* Hide overflowing text */
+    // text-overflow: ellipsis; /* Add ellipsis (...) at the end */
+}
+
+.currentScopeDirnameDiv {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#soloButtonsDiv {
+    flex: 1;
+    background-color: rgb(40, 137, 40);
+}
+
+#hideButtonsDiv {
+    flex: 1;
+    background-color: rgb(255, 187, 198);
 }
 
 .locContentObject {

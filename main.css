@@ -29,11 +29,42 @@ body {
           flex-direction: column;
 }
 
-#dirsDiv {
+#dirsDivParent {
   overflow: auto;
   -webkit-box-flex: 7;
       -ms-flex: 7;
           flex: 7;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+#dirsDiv {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow-x: hidden;
+}
+
+.dirDiv {
+  background-color: antiquewhite;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+#tryIt {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  background-color: olive;
 }
 
 #currentScopeMonitor {
@@ -44,27 +75,37 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  overflow: auto;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
 }
 
-.dirInScope1 {
-  color: #c9c9c9;
-  background-color: white;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
-  height: fit-content;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: 4px;
-  padding: 4px;
-  border: 2px solid black;
-  border-radius: 5em;
+#currentScopeDirnamesDiv {
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+  background-color: #ff1d1d;
+  overflow: hidden;
+}
+
+.currentScopeDirnameDiv {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#soloButtonsDiv {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  background-color: #288928;
+}
+
+#hideButtonsDiv {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  background-color: #ffbbc6;
 }
 
 .locContentObject {
