@@ -27,7 +27,7 @@ body {
 
 #dirsDiv {
     flex: 7;
-    overflow: auto;
+    overflow-y: scroll;
 }
 
 .dirDiv {
@@ -41,9 +41,10 @@ body {
 #currentScopeMonitor {
     flex: 2;
     background-color: gold;
-    display: flex;
-    overflow: auto;
-    flex-wrap: wrap;
+    // display: flex;
+    // overflow: auto;
+    // flex-wrap: wrap;
+    overflow-y: scroll;
 }
 
 #currentScopeDirnamesDiv {
@@ -94,9 +95,41 @@ body {
     background-color: orange;
     overflow: auto;
     // overflow-wrap: anywhere;
-    display: flex;
-    flex-wrap: wrap;
-    // overflow-y: scroll;
+    // display: flex;
+    // flex-wrap: wrap;
+    overflow-y: scroll;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    overflow-y: scroll;
+}
+
+th {
+    text-align: left;
+    vertical-align: top;
+}
+
+td {
+    background-color: red;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#currentScopeDirectoryNameHeader {
+    width: 60%;
+    max-width: 60%;
+}
+
+#filesTable {
+    background-color: yellow;
+}
+
+#filenameHeader {
+    width: 40%;
+    max-width: 40%;
 }
 
 #filenamesDiv {
@@ -116,10 +149,10 @@ body {
     background-color: pink;
 }
 
-#notFilesDiv {
-    flex: 1;
-    background-color: black;
-}
+// #notFilesDiv {
+//     flex: 1;
+//     background-color: black;
+// }
 
 .bar {
     display: flex;

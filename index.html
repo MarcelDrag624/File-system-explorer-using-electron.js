@@ -18,26 +18,46 @@
                     <button id="forwardButton" disabled>forward</button>
                 </div>
                 <!-- <div id="dirsDivParent"> -->
-                    <div id="dirsDiv"></div>
+                    <div id="dirsDiv">
+                        <table id="dirsTable">
+                            <tr>
+                                <th>Dirname</th>
+                            </tr>
+                        </table>
+                    </div>
                 <!-- </div> -->
                     <div id="currentScopeMonitor">
-                        <div id="currentScopeDirnamesDiv"></div>
+                        <!-- <div id="currentScopeDirnamesDiv"></div>
                         <div id="soloButtonsDiv"></div>
-                        <div id="hideButtonsDiv"></div>
+                        <div id="hideButtonsDiv"></div> -->
+                        <table id="currentScopeMonitorTable">
+                            <tr>
+                                <th id="currentScopeDirectoryNameHeader">Directory name</th>
+                                <th>Solo</th>
+                                <th>Hide</th>
+                            </tr>
+                        </table>
                     </div>
             </div>
             <div id="rightPanel">
-                <div class="bar">
+                <!-- <div class="bar">
                     <div id="sortByFilename">Filename</div>
                     <div id="sortByCreationTime">Creation time</div>
                     <div id="sortByLastAccessTime">Last access time</div>
-                </div>
+                </div> -->
                 <div id="filesDiv">
-                    <div id="filenamesDiv"></div>
+                    <!-- <div id="filenamesDiv"></div>
                     <div id="creationTimesDiv"></div>
-                    <div id="lastAccessTimesDiv"></div>
+                    <div id="lastAccessTimesDiv"></div> -->
+                    <table id="filesTable">
+                        <tr id="sortingBar">
+                            <th id="filenameHeader">Filename</th>
+                            <th id="creationTimeHeader">Creation time</th>
+                            <th id="lastAccessTimeHeader">Last access time</th>
+                        </tr>
+                    </table>
                 </div>
-                <div id="notFilesDiv"></div>
+                <!-- <div id="notFilesDiv"></div> -->
             </div>
         </div>
     </div>

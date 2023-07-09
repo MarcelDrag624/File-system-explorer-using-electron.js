@@ -71,7 +71,7 @@ function sortDisplayedData() {
         } else if (creationTimeSorting == 1) {
             mainWindow.webContents.send('chanel8', {
                 filename: {innerText: 'Filename', textWeight: 100},
-                creationTime: {innerText: 'Creation time (↑)', textWeight: 1000},
+                creationTime: {innerText: 'Creation time ▲', textWeight: 1000},
                 lastAccessTime: {innerText: 'Last access time', textWeight: 100}
         });
             currentScope.fileContent.sort((a,b) => a.fileBirthtime - b.fileBirthtime);
@@ -79,7 +79,7 @@ function sortDisplayedData() {
         } else if (creationTimeSorting == 2) {
             mainWindow.webContents.send('chanel8', {
                 filename: {innerText: 'Filename', textWeight: 100},
-                creationTime: {innerText: 'Creation time (↓)', textWeight: 1000},
+                creationTime: {innerText: 'Creation time ▼', textWeight: 1000},
                 lastAccessTime: {innerText: 'Last access time', textWeight: 100}
         });
             currentScope.fileContent.sort((a,b) => b.fileBirthtime - a.fileBirthtime);
@@ -103,7 +103,7 @@ function sortDisplayedData() {
             mainWindow.webContents.send('chanel8', {
                 filename: {innerText: 'Filename', textWeight: 100},
                 creationTime: {innerText: 'Creation time', textWeight: 100},
-                lastAccessTime: {innerText: 'Last access time (↑)', textWeight: 1000}
+                lastAccessTime: {innerText: 'Last access time ▲', textWeight: 1000}
         });
             currentScope.fileContent.sort((a,b) => a.fileLastAccessTime - b.fileLastAccessTime);
 
@@ -111,7 +111,7 @@ function sortDisplayedData() {
             mainWindow.webContents.send('chanel8', {
                 filename: {innerText: 'Filename', textWeight: 100},
                 creationTime: {innerText: 'Creation time', textWeight: 100},
-                lastAccessTime: {innerText: 'Last access time (↓)', textWeight: 1000}
+                lastAccessTime: {innerText: 'Last access time ▼', textWeight: 1000}
         });
             currentScope.fileContent.sort((a,b) => b.fileLastAccessTime - a.fileLastAccessTime);
 
@@ -134,7 +134,7 @@ function sortDisplayedData() {
 }
 
 function updateSortingTypeAndSort(event, targetId) {
-    if (targetId == 'sortByFilename') {
+    if (targetId == 'filenameHeader') {
         if (currentScopeDirs.length == 1 && filenameSorting == 0) {
             creationTimeSorting = 0;
             lastAccessTimeSorting = 0;
@@ -147,13 +147,13 @@ function updateSortingTypeAndSort(event, targetId) {
             console.log('2');   
         }
 
-    } else if (targetId == 'sortByCreationTime') {
+    } else if (targetId == 'creationTimeHeader') {
             filenameSorting = 0;
             lastAccessTimeSorting = 0;
             creationTimeSorting += 1;   
             console.log('3'); 
 
-    } else if (targetId == 'sortByLastAccessTime') {
+    } else if (targetId == 'lastAccessTimeHeader') {
         filenameSorting = 0;
         creationTimeSorting = 0;
         lastAccessTimeSorting += 1;   

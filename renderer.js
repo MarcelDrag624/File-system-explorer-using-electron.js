@@ -6,7 +6,7 @@ const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
 const sortByFilenameDiv = document.getElementById('sortByFilename');
-const sortingBar = document.querySelector('.bar');
+const sortingBar = document.getElementById('sortingBar');
 const sortByFilename = document.getElementById('sortByFilename');
 const sortByCreationTime = document.getElementById('sortByCreationTime');
 const sortByLastAccessTime = document.getElementById('sortByLastAccessTime');
@@ -14,6 +14,12 @@ const currentScopeMonitor = document.getElementById('currentScopeMonitor');
 const currentScopeDirnamesDiv = document.getElementById('currentScopeDirnamesDiv');
 const soloButtonsDiv = document.getElementById('soloButtonsDiv');
 const hideButtonsDiv = document.getElementById('hideButtonsDiv');
+const filesTable = document.getElementById('filesTable');
+const dirsTable = document.getElementById('dirsTable');
+const currentScopeMonitorTable = document.getElementById('currentScopeMonitorTable');
+const filenameHeader = document.getElementById('filenameHeader');
+const creationTimeHeader = document.getElementById('creationTimeHeader');
+const lastAccessTimeHeader = document.getElementById('lastAccessTimeHeader');
 
 let locHistoryIndex = 0;
 let locHistory = [];
@@ -26,32 +32,44 @@ let alphabeticalSortingState = 0;
 
 function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     if (targetsToBeDeleted == 'everything') {
-        const dirsDivChildren = Array.from(dirsDiv.children);
-        const filenamesDivChildren = Array.from(filenamesDiv.children);
-        const creationTimesDivChildren = Array.from(creationTimesDiv.children);
-        const lastAccessTimesDivChildren = Array.from(lastAccessTimesDiv.children);
+        // const dirsDivChildren = Array.from(dirsDiv.children);
+        // const filenamesDivChildren = Array.from(filenamesDiv.children);
+        // const creationTimesDivChildren = Array.from(creationTimesDiv.children);
+        // const lastAccessTimesDivChildren = Array.from(lastAccessTimesDiv.children);
     
-        for (let child of dirsDivChildren) {
-            child.remove();
+        // for (let child of dirsDivChildren) {
+        //     child.remove();
+        // }
+
+        // for (let child of filenamesDivChildren) {
+        //     child.remove();
+        // }
+
+        // for (let child of creationTimesDivChildren) {
+        //     child.remove();
+        // }
+
+        // for (let child of lastAccessTimesDivChildren) {
+        //     child.remove();
+        // }
+
+        while (dirsTable.rows.length > 1) {
+            dirsTable.deleteRow(1);
         }
 
-        for (let child of filenamesDivChildren) {
-            child.remove();
-        }
-
-        for (let child of creationTimesDivChildren) {
-            child.remove();
-        }
-
-        for (let child of lastAccessTimesDivChildren) {
-            child.remove();
+        while (filesTable.rows.length > 1) {
+            filesTable.deleteRow(1);
         }
 
     } else {
-        let targetChildren = Array.from(targetsToBeDeleted.children);
+        // let targetChildren = Array.from(targetsToBeDeleted.children);
 
-        for (let child of targetChildren) {
-            child.remove();
+        // for (let child of targetChildren) {
+        //     child.remove();
+        // }
+
+        while (targetsToBeDeleted.rows.length > 1) {
+            targetsToBeDeleted.deleteRow(1);
         }
     }
 }
@@ -80,28 +98,41 @@ function createLocObject(targetDiv, objName) {
 
 function encapsulatedCreateLocObject(objName, targetDiv) {
     if (targetDiv == dirsDiv) {
-        const div = document.createElement('div');
+        // const div = document.createElement('div');
 
-        div.innerText = objName;
-        div.classList.add('dirDiv');
+        // div.innerText = objName;
+        // div.classList.add('dirDiv');
         
-        dirsDiv.append(div);
+        // dirsDiv.append(div);
+
+        let row = dirsTable.insertRow(dirsTable.rows.length);
+        let dirnameCell = row.insertCell();
+
+        dirnameCell.innerText = objName;
 
     } else {
-        const filenameDiv = document.createElement('div');
-        const creationTimeDiv = document.createElement('div');
-        const lastAccessTimeDiv = document.createElement('div');
+        // const filenameDiv = document.createElement('div');
+        // const creationTimeDiv = document.createElement('div');
+        // const lastAccessTimeDiv = document.createElement('div');
 
-        filenameDiv.innerText = objName.filename;
-        filenameDiv.classList.add('filenameDiv');
+        // filenameDiv.innerText = objName.filename;
+        // filenameDiv.classList.add('filenameDiv');
 
-        creationTimeDiv.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
+        // creationTimeDiv.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
 
-        lastAccessTimeDiv.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
+        // lastAccessTimeDiv.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
 
-        filenamesDiv.append(filenameDiv);
-        creationTimesDiv.append(creationTimeDiv);
-        lastAccessTimesDiv.append(lastAccessTimeDiv);
+        // filenamesDiv.append(filenameDiv);
+        // creationTimesDiv.append(creationTimeDiv);
+        // lastAccessTimesDiv.append(lastAccessTimeDiv);
+        let row = filesTable.insertRow(filesTable.rows.length);
+        let filenameCell = row.insertCell();
+        let creationTimeCell = row.insertCell();
+        let lastAccessTimeCell = row.insertCell();
+
+        filenameCell.innerText = objName.filename;
+        creationTimeCell.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
+        lastAccessTimeCell.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
     }   
 }
 
@@ -258,9 +289,11 @@ dirsDiv.addEventListener('click', async (event) => {
     const target = event.target;
 
     if (event.ctrlKey && target !== event.currentTarget) {
-        removeDisplayedContent(filenamesDiv);
-        removeDisplayedContent(creationTimesDiv);
-        removeDisplayedContent(lastAccessTimesDiv);
+        // removeDisplayedContent(filenamesDiv);
+        // removeDisplayedContent(creationTimesDiv);
+        // removeDisplayedContent(lastAccessTimesDiv);
+
+        removeDisplayedContent(filesTable);
 
         // let selectedLocPath;
     
@@ -277,9 +310,11 @@ sortingBar.addEventListener('click', async () => {
     event.stopPropagation();
     const target = event.target;
 
-    removeDisplayedContent(filenamesDiv);
-    removeDisplayedContent(creationTimesDiv);
-    removeDisplayedContent(lastAccessTimesDiv);
+    // removeDisplayedContent(filenamesDiv);
+    // removeDisplayedContent(creationTimesDiv);
+    // removeDisplayedContent(lastAccessTimesDiv);
+
+    removeDisplayedContent(filesTable);
 
     currentScope = await window.electronAPI.callWithIpcUpdateSortingTypeAndSort(target.id);
 
@@ -289,27 +324,37 @@ sortingBar.addEventListener('click', async () => {
 window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
 
     // console.log(indicatorsObj)
-    sortByFilename.innerText = indicatorsObj.filename.innerText;
-    sortByFilename.style.fontWeight = indicatorsObj.filename.textWeight;
+    filenameHeader.innerText = indicatorsObj.filename.innerText;
+    filenameHeader.style.fontWeight = indicatorsObj.filename.textWeight;
 
-    sortByCreationTime.innerText = indicatorsObj.creationTime.innerText;
-    sortByCreationTime.style.fontWeight = indicatorsObj.creationTime.textWeight;
+    creationTimeHeader.innerText = indicatorsObj.creationTime.innerText;
+    creationTimeHeader.style.fontWeight = indicatorsObj.creationTime.textWeight;
 
-    sortByLastAccessTime.innerText = indicatorsObj.lastAccessTime.innerText;
-    sortByLastAccessTime.style.fontWeight = indicatorsObj.lastAccessTime.textWeight;
+    lastAccessTimeHeader.innerText = indicatorsObj.lastAccessTime.innerText;
+    lastAccessTimeHeader.style.fontWeight = indicatorsObj.lastAccessTime.textWeight;
 })
 
 window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
     
-    removeDisplayedContent(currentScopeDirnamesDiv);
-    removeDisplayedContent(soloButtonsDiv);
-    removeDisplayedContent(hideButtonsDiv);
+    // removeDisplayedContent(currentScopeDirnamesDiv);
+    // removeDisplayedContent(soloButtonsDiv);
+    // removeDisplayedContent(hideButtonsDiv);
+
+    removeDisplayedContent(currentScopeMonitorTable);
 
     for (let dir of currentScopeDirs) {
-        const currentScopeDir = document.createElement('div');
-        currentScopeDir.innerText = dir.name;
-        currentScopeDir.title = dir.path;
-        currentScopeDir.classList.add('currentScopeDirnameDiv');
-        currentScopeDirnamesDiv.append(currentScopeDir);
+        // const currentScopeDir = document.createElement('div');
+        // currentScopeDir.innerText = dir.name;
+        // currentScopeDir.title = dir.path;
+        // currentScopeDir.classList.add('currentScopeDirnameDiv');
+        // currentScopeDirnamesDiv.append(currentScopeDir);
+
+        let row = currentScopeMonitorTable.insertRow(currentScopeMonitorTable.rows.length);
+        let dirnameCell = row.insertCell();
+        let soloButtonCell = row.insertCell();
+        let hideButtonCell = row.insertCell();
+
+        dirnameCell.innerText = dir.name;
+        dirnameCell.title = dir.path;
     }
 })
