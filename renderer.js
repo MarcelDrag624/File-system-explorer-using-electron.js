@@ -1,19 +1,10 @@
 const dirsDiv = document.getElementById('dirsDiv');
-const filenamesDiv = document.getElementById('filenamesDiv'); 
-const creationTimesDiv = document.getElementById('creationTimesDiv'); 
-const lastAccessTimesDiv = document.getElementById('lastAccessTimesDiv'); 
+const filesDiv = document.getElementById('filesDiv');
 const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
-const sortByFilenameDiv = document.getElementById('sortByFilename');
 const sortingBar = document.getElementById('sortingBar');
-const sortByFilename = document.getElementById('sortByFilename');
-const sortByCreationTime = document.getElementById('sortByCreationTime');
-const sortByLastAccessTime = document.getElementById('sortByLastAccessTime');
 const currentScopeMonitor = document.getElementById('currentScopeMonitor');
-const currentScopeDirnamesDiv = document.getElementById('currentScopeDirnamesDiv');
-const soloButtonsDiv = document.getElementById('soloButtonsDiv');
-const hideButtonsDiv = document.getElementById('hideButtonsDiv');
 const filesTable = document.getElementById('filesTable');
 const dirsTable = document.getElementById('dirsTable');
 const currentScopeMonitorTable = document.getElementById('currentScopeMonitorTable');
@@ -32,27 +23,6 @@ let alphabeticalSortingState = 0;
 
 function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     if (targetsToBeDeleted == 'everything') {
-        // const dirsDivChildren = Array.from(dirsDiv.children);
-        // const filenamesDivChildren = Array.from(filenamesDiv.children);
-        // const creationTimesDivChildren = Array.from(creationTimesDiv.children);
-        // const lastAccessTimesDivChildren = Array.from(lastAccessTimesDiv.children);
-    
-        // for (let child of dirsDivChildren) {
-        //     child.remove();
-        // }
-
-        // for (let child of filenamesDivChildren) {
-        //     child.remove();
-        // }
-
-        // for (let child of creationTimesDivChildren) {
-        //     child.remove();
-        // }
-
-        // for (let child of lastAccessTimesDivChildren) {
-        //     child.remove();
-        // }
-
         while (dirsTable.rows.length > 1) {
             dirsTable.deleteRow(1);
         }
@@ -62,12 +32,6 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
         }
 
     } else {
-        // let targetChildren = Array.from(targetsToBeDeleted.children);
-
-        // for (let child of targetChildren) {
-        //     child.remove();
-        // }
-
         while (targetsToBeDeleted.rows.length > 1) {
             targetsToBeDeleted.deleteRow(1);
         }
@@ -84,13 +48,13 @@ function createLocObject(targetDiv, objName) {
     if (locHistoryIndex > 0) {
         if (targetDiv == dirsDiv) {
             encapsulatedCreateLocObject(objName, targetDiv);
-        } else if (targetDiv == filenamesDiv) {
+        } else if (targetDiv == filesDiv) {
             encapsulatedCreateLocObject(objName, targetDiv);
         }
     } else {
         if (targetDiv == dirsDiv) {
             encapsulatedCreateLocObject(objName, targetDiv);
-        } else if (targetDiv == filenamesDiv) {
+        } else if (targetDiv == filesDiv) {
             encapsulatedCreateLocObject(objName, targetDiv);
         }
     }
@@ -98,12 +62,6 @@ function createLocObject(targetDiv, objName) {
 
 function encapsulatedCreateLocObject(objName, targetDiv) {
     if (targetDiv == dirsDiv) {
-        // const div = document.createElement('div');
-
-        // div.innerText = objName;
-        // div.classList.add('dirDiv');
-        
-        // dirsDiv.append(div);
 
         let row = dirsTable.insertRow(dirsTable.rows.length);
         let dirnameCell = row.insertCell();
@@ -111,20 +69,6 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         dirnameCell.innerText = objName;
 
     } else {
-        // const filenameDiv = document.createElement('div');
-        // const creationTimeDiv = document.createElement('div');
-        // const lastAccessTimeDiv = document.createElement('div');
-
-        // filenameDiv.innerText = objName.filename;
-        // filenameDiv.classList.add('filenameDiv');
-
-        // creationTimeDiv.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
-
-        // lastAccessTimeDiv.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
-
-        // filenamesDiv.append(filenameDiv);
-        // creationTimesDiv.append(creationTimeDiv);
-        // lastAccessTimesDiv.append(lastAccessTimeDiv);
         let row = filesTable.insertRow(filesTable.rows.length);
         let filenameCell = row.insertCell();
         let creationTimeCell = row.insertCell();
@@ -160,39 +104,6 @@ function rememberScrollHeight() {
 
 function remindScrollHeight() {
     dirsDiv.scrollTop = scrollHistory[locHistoryIndex];
-}
-
-async function sortingFileDivs() {
-    if (alphabeticalSortingState == 1) {
-        const filenameDivs = filenamesDiv.querySelectorAll('.locContentObject');
-        const filenameDivsSorted = Array.from(filenameDivs).sort((a, b) => a.innerText.localeCompare(b.innerText));
-
-        for (filenameDiv of filenameDivsSorted) {
-            filenamesDiv.appendChild(filenameDiv);
-        }
-
-    } else if (alphabeticalSortingState == 2) {
-        const filenameDivs = filenamesDiv.querySelectorAll('.locContentObject');
-        const filenameDivsSorted = Array.from(filenameDivs).sort((a, b) => b.innerText.localeCompare(a.innerText));
-
-        for (filenameDiv of filenameDivsSorted) {
-            filenamesDiv.appendChild(filenameDiv);
-        }
-
-    } else {
-        const filenameDivs = filenamesDiv.querySelectorAll('.locContentObject');
-        alphabeticalSortingState = 0;
-        
-        for (filenameDiv of filenameDivs) {
-            filenameDiv.remove();
-        }
-
-        for (dir of selectedDirs) {
-            const currentScope = await window.electronAPI.callWithIpcGetLocContent(dir);
-
-            createAllLocObjects(filenamesDiv, currentScope.fileContent, dir);
-        }
-    }
 }
 
 window.electronAPI.callWithIpcUpdateNavigationMode((event, locHistoryIndex, locHistoryLength) => {
@@ -242,7 +153,7 @@ dirsDiv.addEventListener('dblclick', async (event) => {
         locHistoryIndex = locHistoryData.locHistoryIndex;
         
         createAllLocObjects(dirsDiv, currentScope.dirContent);
-        createAllLocObjects(filenamesDiv, currentScope.fileContent);
+        createAllLocObjects(filesDiv, currentScope.fileContent);
     }
 })
 
@@ -258,7 +169,7 @@ backButton.addEventListener('click', async (event) => {
 
         if (locHistoryIndex > 0) {
             createAllLocObjects(dirsDiv, currentScope.dirContent);
-            createAllLocObjects(filenamesDiv, currentScope.fileContent);  
+            createAllLocObjects(filesDiv, currentScope.fileContent);  
 
         } else {
             createAllLocObjects(dirsDiv, currentScope.dirContent);
@@ -278,7 +189,7 @@ forwardButton.addEventListener('click', async (event) => {
     locHistoryIndex = locHistoryData.locHistoryIndex;
     
     createAllLocObjects(dirsDiv, currentScope.dirContent);
-    createAllLocObjects(filenamesDiv, currentScope.fileContent); 
+    createAllLocObjects(filesDiv, currentScope.fileContent); 
 
     remindScrollHeight();
 })
@@ -289,20 +200,15 @@ dirsDiv.addEventListener('click', async (event) => {
     const target = event.target;
 
     if (event.ctrlKey && target !== event.currentTarget) {
-        // removeDisplayedContent(filenamesDiv);
-        // removeDisplayedContent(creationTimesDiv);
-        // removeDisplayedContent(lastAccessTimesDiv);
 
         removeDisplayedContent(filesTable);
-
-        // let selectedLocPath;
     
         const justFiles = true;
         const receivedData = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
         const currentScope = receivedData.currentScope;
         const selectedDirPath = receivedData.selectedLocPath;
 
-        createAllLocObjects(filenamesDiv, currentScope.fileContent);   
+        createAllLocObjects(filesDiv, currentScope.fileContent);   
     }
 })
 
@@ -310,20 +216,14 @@ sortingBar.addEventListener('click', async () => {
     event.stopPropagation();
     const target = event.target;
 
-    // removeDisplayedContent(filenamesDiv);
-    // removeDisplayedContent(creationTimesDiv);
-    // removeDisplayedContent(lastAccessTimesDiv);
-
     removeDisplayedContent(filesTable);
 
     currentScope = await window.electronAPI.callWithIpcUpdateSortingTypeAndSort(target.id);
 
-    createAllLocObjects(filenamesDiv, currentScope.fileContent);   
+    createAllLocObjects(filesDiv, currentScope.fileContent);   
 })
 
 window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
-
-    // console.log(indicatorsObj)
     filenameHeader.innerText = indicatorsObj.filename.innerText;
     filenameHeader.style.fontWeight = indicatorsObj.filename.textWeight;
 
@@ -335,20 +235,9 @@ window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
 })
 
 window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
-    
-    // removeDisplayedContent(currentScopeDirnamesDiv);
-    // removeDisplayedContent(soloButtonsDiv);
-    // removeDisplayedContent(hideButtonsDiv);
-
     removeDisplayedContent(currentScopeMonitorTable);
 
     for (let dir of currentScopeDirs) {
-        // const currentScopeDir = document.createElement('div');
-        // currentScopeDir.innerText = dir.name;
-        // currentScopeDir.title = dir.path;
-        // currentScopeDir.classList.add('currentScopeDirnameDiv');
-        // currentScopeDirnamesDiv.append(currentScopeDir);
-
         let row = currentScopeMonitorTable.insertRow(currentScopeMonitorTable.rows.length);
         let dirnameCell = row.insertCell();
         let soloButtonCell = row.insertCell();

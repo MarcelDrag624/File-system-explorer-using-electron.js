@@ -15,14 +15,9 @@ body {
 }
 
 #leftPanel {
-    // flex: 1;
     width: 33%;
     display: flex;
     flex-direction: column;
-}
-
-#navButtonsDiv {
-    // flex: 1;
 }
 
 #dirsDiv {
@@ -30,60 +25,13 @@ body {
     overflow-y: scroll;
 }
 
-.dirDiv {
-    background-color: antiquewhite;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
-}
-
 #currentScopeMonitor {
     flex: 2;
     background-color: gold;
-    // display: flex;
-    // overflow: auto;
-    // flex-wrap: wrap;
     overflow-y: scroll;
 }
 
-#currentScopeDirnamesDiv {
-    flex: 3;
-    background-color: rgb(255, 29, 29);
-    overflow: hidden;
-    // white-space: nowrap; /* Prevent line breaks */
-    // overflow: hidden; /* Hide overflowing text */
-    // text-overflow: ellipsis; /* Add ellipsis (...) at the end */
-}
-
-.currentScopeDirnameDiv {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-#soloButtonsDiv {
-    flex: 1;
-    background-color: rgb(40, 137, 40);
-}
-
-#hideButtonsDiv {
-    flex: 1;
-    background-color: rgb(255, 187, 198);
-}
-
-.locContentObject {
-    width: fit-content;
-    // padding: 2px;
-    // margin-top: 1px;
-}
-
-.locContentObject::selection {
-    background-color: transparent;
-}
-
 #rightPanel {
-    // flex: 2;
     width: 67%;
     background-color: green;
     display: flex;
@@ -94,9 +42,6 @@ body {
     flex: 2;
     background-color: orange;
     overflow: auto;
-    // overflow-wrap: anywhere;
-    // display: flex;
-    // flex-wrap: wrap;
     overflow-y: scroll;
 }
 
@@ -130,49 +75,4 @@ td {
 #filenameHeader {
     width: 40%;
     max-width: 40%;
-}
-
-#filenamesDiv {
-    flex: 4;
-    background-color: blue;
-    overflow: hidden;
-    // white-space: nowrap;
-}
-
-#creationTimesDiv {
-    flex: 2;
-    background-color: yellow;
-}
-
-#lastAccessTimesDiv {
-    flex: 2;
-    background-color: pink;
-}
-
-// #notFilesDiv {
-//     flex: 1;
-//     background-color: black;
-// }
-
-.bar {
-    display: flex;
-}
-
-#sortByFilename {
-    flex: 4;
-}
-
-#sortByCreationTime {
-    flex: 2;
-}
-
-#sortByLastAccessTime {
-    flex: 2;
-}
-
-.filenameDiv {
-    // background-color: red;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
