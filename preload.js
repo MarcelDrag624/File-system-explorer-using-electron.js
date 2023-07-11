@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     callWithIpcUpdateSortingTypeAndSort: (targetId) => ipcRenderer.invoke('chanel7', targetId),
     callWithIpcUpdateSortingIndicator: (indicatorsObj) => ipcRenderer.on('chanel8', indicatorsObj),
     getCurrentScopeDirs: (currentScopeDirs) => ipcRenderer.on('chanel9', currentScopeDirs),
+    runFile: (filePath) => ipcRenderer.send('chanel10', filePath)
 })

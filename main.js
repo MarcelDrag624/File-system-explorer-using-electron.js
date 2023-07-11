@@ -1,6 +1,7 @@
 const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const path = require('path');
 const fs = require('fs');
+const shell = require('electron').shell;
 
 let addedRootDirs = {dirContent: []};
 let locHistory = [];
@@ -351,6 +352,10 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
     return {currentScope, selectedLocPath};
 }
 
+function runFile(event, filePath) {
+    shell.openPath(filePath);
+}
+
 app.whenReady().then(() => {
     ipcMain.handle('chanel1', getRootDirs);
     ipcMain.handle('chanel2', getClickedDirContent);
@@ -358,5 +363,6 @@ app.whenReady().then(() => {
     ipcMain.handle('chanel5', getNextDirContent);
     ipcMain.handle('chanel6', addSelectedDirToCurrentScope);
     ipcMain.handle('chanel7', updateSortingTypeAndSort);
+    ipcMain.on('chanel10', runFile)
     createWindow();
 })

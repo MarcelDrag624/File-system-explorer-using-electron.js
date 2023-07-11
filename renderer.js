@@ -16,6 +16,8 @@ let locHistoryIndex = 0;
 let locHistory = [];
 let scrollHistory = [];
 let selectedDirs = [];
+let currentScope;
+let hiddenDirs = [];
 
 // When sortingState == 0 fileDivs are in original order, when == 1 they're sorted alphabetically
 // and when == 2 they're sorted in reversed alphabetical order
@@ -38,24 +40,28 @@ function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     }
 }
 
-function createAllLocObjects(targetDiv, objNamesArray) {
+function createAllLocObjects(targetDiv, objNamesArray, hiddenDirs) {
     for (let objName of objNamesArray) {
-        createLocObject(targetDiv, objName);
+        createLocObject(targetDiv, objName, hiddenDirs);
     }
 }
 
-function createLocObject(targetDiv, objName) {
+function createLocObject(targetDiv, objName, hiddenDirs) {
     if (locHistoryIndex > 0) {
         if (targetDiv == dirsDiv) {
             encapsulatedCreateLocObject(objName, targetDiv);
         } else if (targetDiv == filesDiv) {
-            encapsulatedCreateLocObject(objName, targetDiv);
+            if (!hiddenDirs.some(dir => dir == objName.parentPath)) {
+                encapsulatedCreateLocObject(objName, targetDiv);
+            }
         }
     } else {
         if (targetDiv == dirsDiv) {
             encapsulatedCreateLocObject(objName, targetDiv);
         } else if (targetDiv == filesDiv) {
-            encapsulatedCreateLocObject(objName, targetDiv);
+            if (!hiddenDirs.some(dir => dir == objName.parentPath)) {
+                encapsulatedCreateLocObject(objName, targetDiv);
+            }
         }
     }
 }
@@ -68,6 +74,27 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
 
         dirnameCell.innerText = objName;
 
+        dirnameCell.addEventListener('dblclick', async (event) => {
+            rememberScrollHeight();
+        
+            event.stopPropagation();
+        
+            const target = event.target;
+            const clickedDirName = target.innerText;
+        
+            if (!event.ctrlKey) {
+                removeDisplayedContent();
+        
+                const acquiredData = await window.electronAPI.callWithIpcGetClickedDirContent(clickedDirName);
+                const locHistoryData = acquiredData.locHistoryData;
+                currentScope = acquiredData.currentScope;
+                locHistoryIndex = locHistoryData.locHistoryIndex;
+                
+                createAllLocObjects(dirsDiv, currentScope.dirContent, hiddenDirs);
+                createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs);
+            }
+        })
+
     } else {
         let row = filesTable.insertRow(filesTable.rows.length);
         let filenameCell = row.insertCell();
@@ -77,6 +104,10 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         filenameCell.innerText = objName.filename;
         creationTimeCell.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
         lastAccessTimeCell.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
+
+        row.addEventListener('click', () => {
+            window.electronAPI.runFile(objName.parentPath + '\\' + objName.filename);
+        })
     }   
 }
 
@@ -136,26 +167,26 @@ addDirButton.addEventListener('click', async (event) => {
     }
 })
 
-dirsDiv.addEventListener('dblclick', async (event) => {
-    rememberScrollHeight();
+// dirsDiv.addEventListener('dblclick', async (event) => {
+//     rememberScrollHeight();
 
-    event.stopPropagation();
+//     event.stopPropagation();
 
-    const target = event.target;
-    const clickedDirName = target.innerText;
+//     const target = event.target;
+//     const clickedDirName = target.innerText;
 
-    if (target !== event.currentTarget && !event.ctrlKey) {
-        removeDisplayedContent();
+//     if (target !== event.currentTarget && !event.ctrlKey) {
+//         removeDisplayedContent();
 
-        const acquiredData = await window.electronAPI.callWithIpcGetClickedDirContent(clickedDirName);
-        const locHistoryData = acquiredData.locHistoryData;
-        const currentScope = acquiredData.currentScope;
-        locHistoryIndex = locHistoryData.locHistoryIndex;
+//         const acquiredData = await window.electronAPI.callWithIpcGetClickedDirContent(clickedDirName);
+//         const locHistoryData = acquiredData.locHistoryData;
+//         currentScope = acquiredData.currentScope;
+//         locHistoryIndex = locHistoryData.locHistoryIndex;
         
-        createAllLocObjects(dirsDiv, currentScope.dirContent);
-        createAllLocObjects(filesDiv, currentScope.fileContent);
-    }
-})
+//         createAllLocObjects(dirsDiv, currentScope.dirContent, hiddenDirs);
+//         createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs);
+//     }
+// })
 
 backButton.addEventListener('click', async (event) => {
     event.stopPropagation();
@@ -164,15 +195,15 @@ backButton.addEventListener('click', async (event) => {
 
     const acquiredData = await window.electronAPI.callWithIpcGetPreviousDirContent();
     const locHistoryData = acquiredData.locHistoryData;
-    const currentScope = acquiredData.currentScope;
+    currentScope = acquiredData.currentScope;
     locHistoryIndex = locHistoryData.locHistoryIndex;
 
         if (locHistoryIndex > 0) {
-            createAllLocObjects(dirsDiv, currentScope.dirContent);
-            createAllLocObjects(filesDiv, currentScope.fileContent);  
+            createAllLocObjects(dirsDiv, currentScope.dirContent, hiddenDirs);
+            createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs);  
 
         } else {
-            createAllLocObjects(dirsDiv, currentScope.dirContent);
+            createAllLocObjects(dirsDiv, currentScope.dirContent, hiddenDirs);
         }
     remindScrollHeight();
 })
@@ -184,12 +215,12 @@ forwardButton.addEventListener('click', async (event) => {
     
     const acquiredData = await window.electronAPI.callWithIpcGetNextDirContent();
     const locHistoryData = acquiredData.locHistoryData;
-    const currentScope = acquiredData.currentScope;
+    currentScope = acquiredData.currentScope;
     const newLocPath = acquiredData.newLocPath;
     locHistoryIndex = locHistoryData.locHistoryIndex;
     
-    createAllLocObjects(dirsDiv, currentScope.dirContent);
-    createAllLocObjects(filesDiv, currentScope.fileContent); 
+    createAllLocObjects(dirsDiv, currentScope.dirContent, hiddenDirs);
+    createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs); 
 
     remindScrollHeight();
 })
@@ -205,10 +236,10 @@ dirsDiv.addEventListener('click', async (event) => {
     
         const justFiles = true;
         const receivedData = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
-        const currentScope = receivedData.currentScope;
+        currentScope = receivedData.currentScope;
         const selectedDirPath = receivedData.selectedLocPath;
 
-        createAllLocObjects(filesDiv, currentScope.fileContent);   
+        createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs);   
     }
 })
 
@@ -220,7 +251,7 @@ sortingBar.addEventListener('click', async () => {
 
     currentScope = await window.electronAPI.callWithIpcUpdateSortingTypeAndSort(target.id);
 
-    createAllLocObjects(filesDiv, currentScope.fileContent);   
+    createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs);   
 })
 
 window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
@@ -245,5 +276,27 @@ window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
 
         dirnameCell.innerText = dir.name;
         dirnameCell.title = dir.path;
+
+        hideButtonCell.innerText = 'hide';
+        hideButtonCell.addEventListener('click', function () {
+            const dirToBeHidden = this.parentNode.getElementsByTagName('td')[0].title;
+            if (!hiddenDirs.some(dir => dir == dirToBeHidden)) {
+
+                hiddenDirs.push(dirToBeHidden);
+
+            } else {
+
+                for (let i = hiddenDirs.length - 1; i > -1; i--) {
+                    if (hiddenDirs[i] == dirToBeHidden) {
+                        hiddenDirs.splice(i, 1);    
+                    }
+                }  
+            }
+            removeDisplayedContent(filesTable);
+            createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs);   
+        })
     }
 })
+
+
+

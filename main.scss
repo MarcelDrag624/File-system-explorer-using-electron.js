@@ -27,20 +27,17 @@ body {
 
 #currentScopeMonitor {
     flex: 2;
-    background-color: gold;
     overflow-y: scroll;
 }
 
 #rightPanel {
     width: 67%;
-    background-color: green;
     display: flex;
     flex-direction: column;
 }
 
 #filesDiv {
     flex: 2;
-    background-color: orange;
     overflow: auto;
     overflow-y: scroll;
 }
@@ -54,6 +51,13 @@ table {
 th {
     text-align: left;
     vertical-align: top;
+    // position: sticky;
+}
+
+thead th{
+    position: sticky;
+    top: 0;
+    background-color: white;
 }
 
 td {
@@ -66,10 +70,6 @@ td {
 #currentScopeDirectoryNameHeader {
     width: 60%;
     max-width: 60%;
-}
-
-#filesTable {
-    background-color: yellow;
 }
 
 #filenameHeader {
