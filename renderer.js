@@ -75,6 +75,9 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         dirnameCell.innerText = objName;
 
         dirnameCell.addEventListener('dblclick', async (event) => {
+
+            hiddenDirs = [];
+
             rememberScrollHeight();
         
             event.stopPropagation();
@@ -105,7 +108,7 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         creationTimeCell.innerText = new Date(objName.fileBirthtime).toLocaleDateString();
         lastAccessTimeCell.innerText = new Date(objName.fileLastAccessTime).toLocaleDateString();
 
-        row.addEventListener('click', () => {
+        row.addEventListener('dblclick', () => {
             window.electronAPI.runFile(objName.parentPath + '\\' + objName.filename);
         })
     }   
@@ -193,6 +196,8 @@ backButton.addEventListener('click', async (event) => {
 
     removeDisplayedContent();
 
+    hiddenDirs = [];
+
     const acquiredData = await window.electronAPI.callWithIpcGetPreviousDirContent();
     const locHistoryData = acquiredData.locHistoryData;
     currentScope = acquiredData.currentScope;
@@ -212,6 +217,8 @@ forwardButton.addEventListener('click', async (event) => {
     event.stopPropagation();
     
     removeDisplayedContent();
+
+    hiddenDirs = [];
     
     const acquiredData = await window.electronAPI.callWithIpcGetNextDirContent();
     const locHistoryData = acquiredData.locHistoryData;
@@ -229,6 +236,19 @@ dirsDiv.addEventListener('click', async (event) => {
     event.stopPropagation();
 
     const target = event.target;
+
+    const currentScopeMonitorCells = currentScopeMonitorTable.getElementsByTagName('td');
+
+    for (let cell of currentScopeMonitorCells) {
+        if (target.innerText == cell.innerText) {
+
+            for (let i = hiddenDirs.length - 1; i > -1; i--) {
+                if (hiddenDirs[i] == cell.title) {
+                    hiddenDirs.splice(i, 1);    
+                }
+            } 
+        }
+    }
 
     if (event.ctrlKey && target !== event.currentTarget) {
 

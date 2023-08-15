@@ -43,7 +43,7 @@ function sortDisplayedData() {
                 lastAccessTime: {innerText: 'Last access time', textWeight: 100}
             });
 
-            currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
+            currentScope.fileContent.sort((a,b) => a.filenameNoExt.localeCompare(b.filenameNoExt, undefined, {numeric: true}));
 
         } else if (filenameSorting == 2) {
             mainWindow.webContents.send('chanel8', {
@@ -51,7 +51,7 @@ function sortDisplayedData() {
                 creationTime: {innerText: 'Creation time', textWeight: 100},
                 lastAccessTime: {innerText: 'Last access time', textWeight: 100}
         });
-            currentScope.fileContent.sort((a,b) => b.filename.localeCompare(a.filename));
+            currentScope.fileContent.sort((a,b) => b.filenameNoExt.localeCompare(a.filenameNoExt, undefined, {numeric: true}));
 
         } else if (filenameSorting == 3) {
             mainWindow.webContents.send('chanel8', {
@@ -60,8 +60,10 @@ function sortDisplayedData() {
                 lastAccessTime: {innerText: 'Last access time', textWeight: 100}
         });
             filenameSorting = 0; 
+
+            currentScope.fileContent.sort((a,b) => a.filenameNoExt.localeCompare(b.filenameNoExt, undefined, {numeric: true}));
             
-            currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
+            // currentScope.fileContent.sort((a,b) => a.filename.localeCompare(b.filename));
             currentScope.fileContent.sort((a,b) => {
                 const file1OriginIndex = currentScopeDirs.findIndex(obj => obj.path == a.parentPath);
                 const file2OriginIndex = currentScopeDirs.findIndex(obj => obj.path == b.parentPath);
@@ -140,25 +142,25 @@ function updateSortingTypeAndSort(event, targetId) {
             creationTimeSorting = 0;
             lastAccessTimeSorting = 0;
             filenameSorting += 2;
-            console.log('1');
+            // console.log('1');
         } else {
             creationTimeSorting = 0;
             lastAccessTimeSorting = 0;
             filenameSorting += 1; 
-            console.log('2');   
+            // console.log('2');   
         }
 
     } else if (targetId == 'creationTimeHeader') {
             filenameSorting = 0;
             lastAccessTimeSorting = 0;
             creationTimeSorting += 1;   
-            console.log('3'); 
+            // console.log('3'); 
 
     } else if (targetId == 'lastAccessTimeHeader') {
         filenameSorting = 0;
         creationTimeSorting = 0;
         lastAccessTimeSorting += 1;   
-        console.log('3');         
+        // console.log('3');         
 }
     sortDisplayedData();
 
@@ -206,10 +208,23 @@ function getLocContent(newLocPath = null, justFiles = false) {
 
                         let fileLastAccessTime = contentElementFsObject.atimeMs;
 
-                        fileContent.push({filename: contentElement, fileBirthtime, fileLastAccessTime, parentPath: newLocPath});
+                        // console.log(fs.filename(newLocPath+"\\"+contentElement));
+                        let extension = path.extname(newLocPath+"\\"+contentElement);
+                        let filenameNoExt = path.basename(newLocPath+"\\"+contentElement, extension);
+
+                        // for (let i = contentElement.length; i >=0; i--) {
+                        //     if (contentElement[i] == '.') {
+                        //         filenameNoExt = contentElement.substring(0, i);
+                        //     }
+                        // }
+
+                        fileContent.push({filename: contentElement, filenameNoExt, fileBirthtime,
+                        fileLastAccessTime, parentPath: newLocPath});
                     }
                 } catch (err) {}
             }
+            fileContent.sort((a,b) => a.filenameNoExt.localeCompare(b.filenameNoExt, undefined, {numeric: true}));
+
             return {dirContent, fileContent, locPath: newLocPath};
             
         } else {
@@ -225,10 +240,26 @@ function getLocContent(newLocPath = null, justFiles = false) {
 
                         let fileLastAccessTime = contentElementFsObject.atimeMs;
 
-                        fileContent.push({filename: contentElement, fileBirthtime, fileLastAccessTime, parentPath: newLocPath});
+                        // console.log(fs.filename(newLocPath+"\\"+contentElement));
+
+                        let extension = path.extname(newLocPath+"\\"+contentElement);
+                        let filenameNoExt = path.basename(newLocPath+"\\"+contentElement, extension);
+
+                        // for (let i = contentElement.length; i >=0; i--) {
+                        //     if (contentElement[i] == '.') {
+                        //         filenameNoExt = contentElement.substring(0, i);
+                        //     }
+                        // }
+
+                        fileContent.push({filename: contentElement, filenameNoExt, fileBirthtime,
+                        fileLastAccessTime, parentPath: newLocPath});
+
+                        // fileContent.sort((a,b) => a.filenameNoExt.localeCompare(b.filenameNoExt, undefined, {numeric: true}));
                     }
                 } catch (err) {}
             }
+            fileContent.sort((a,b) => a.filenameNoExt.localeCompare(b.filenameNoExt, undefined, {numeric: true}));
+
             return {dirContent, fileContent};
         }
     }
@@ -263,7 +294,7 @@ function getClickedDirContent(event, clickedDirName) {
     sortDisplayedData();
 
     mainWindow.webContents.send('chanel9', currentScopeDirs);
-    console.log(locHistory, locHistoryIndex);
+    // console.log(locHistory, locHistoryIndex);
     return {locHistoryData, currentScope, newLocPath};
 }
 
@@ -346,7 +377,7 @@ function addSelectedDirToCurrentScope(event, clickedDirName, justFiles) {
     }
     sortDisplayedData();
 
-    console.log(currentScopeDirs);
+    // console.log(currentScopeDirs);
     mainWindow.webContents.send('chanel9', currentScopeDirs);
 
     return {currentScope, selectedLocPath};
