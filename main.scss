@@ -25,6 +25,13 @@ body {
     overflow-y: scroll;
 }
 
+#dirsTable th{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
 #currentScopeMonitor {
     flex: 2;
     overflow-y: scroll;
