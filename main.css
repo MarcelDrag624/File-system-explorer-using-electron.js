@@ -1,6 +1,13 @@
+:root {
+  --filesTableColor: rgb(20, 20, 20);
+  --dirsTableColor: rgb(40, 40, 40);
+  --currentScopeMonitorTableColor: rgb(60, 60, 60);
+}
+
 body {
   margin: 0;
   font-family: Helvetica;
+  color: white;
 }
 
 #app {
@@ -32,6 +39,7 @@ body {
       -ms-flex: 7;
           flex: 7;
   overflow-y: scroll;
+  background-color: var(--dirsTableColor);
 }
 
 #dirsTable th {
@@ -43,11 +51,16 @@ body {
           justify-content: space-between;
 }
 
-#currentScopeMonitor {
+#dirsTable thead {
+  background-color: var(--dirsTableColor);
+}
+
+#currentScopeMonitorDiv {
   -webkit-box-flex: 2;
       -ms-flex: 2;
           flex: 2;
   overflow-y: scroll;
+  background-color: var(--currentScopeMonitorTableColor);
 }
 
 #rightPanel {
@@ -59,6 +72,7 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  background-color: var(--filesTableColor);
 }
 
 #filesDiv {
@@ -69,10 +83,15 @@ body {
   overflow-y: scroll;
 }
 
+#filesTable thead {
+  background-color: var(--filesTableColor);
+}
+
 table {
   width: 100%;
   table-layout: fixed;
   overflow-y: scroll;
+  border-collapse: collapse;
 }
 
 th {
@@ -80,7 +99,7 @@ th {
   vertical-align: top;
 }
 
-thead th {
+thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -88,7 +107,6 @@ thead th {
 }
 
 td {
-  background-color: red;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -97,6 +115,10 @@ td {
 #currentScopeDirectoryNameHeader {
   width: 60%;
   max-width: 60%;
+}
+
+#currentScopeMonitorTable thead {
+  background-color: var(--currentScopeMonitorTableColor);
 }
 
 #filenameHeader {

@@ -4,10 +4,13 @@ const backButton = document.getElementById('backButton');
 const addDirButton = document.getElementById('addDirButton');
 const forwardButton = document.getElementById('forwardButton');
 const sortingBar = document.getElementById('sortingBar');
-const currentScopeMonitor = document.getElementById('currentScopeMonitor');
+// const currentScopeMonitor = document.getElementById('currentScopeMonitor');
 const filesTable = document.getElementById('filesTable');
+const filesTableBody = document.getElementById('filesTableBody');
 const dirsTable = document.getElementById('dirsTable');
+const dirsTableBody = document.getElementById('dirsTableBody');
 const currentScopeMonitorTable = document.getElementById('currentScopeMonitorTable');
+const currentScopeMonitorTableBody = document.getElementById('currentScopeMonitorTableBody');
 const filenameHeader = document.getElementById('filenameHeader');
 const creationTimeHeader = document.getElementById('creationTimeHeader');
 const lastAccessTimeHeader = document.getElementById('lastAccessTimeHeader');
@@ -25,17 +28,17 @@ let alphabeticalSortingState = 0;
 
 function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     if (targetsToBeDeleted == 'everything') {
-        while (dirsTable.rows.length > 1) {
-            dirsTable.deleteRow(1);
+        while (dirsTableBody.rows.length >= 1) {
+            dirsTableBody.deleteRow(0);
         }
 
-        while (filesTable.rows.length > 1) {
-            filesTable.deleteRow(1);
+        while (filesTableBody.rows.length >= 1) {
+            filesTableBody.deleteRow(0);
         }
 
     } else {
-        while (targetsToBeDeleted.rows.length > 1) {
-            targetsToBeDeleted.deleteRow(1);
+        while (targetsToBeDeleted.rows.length >= 1) {
+            targetsToBeDeleted.deleteRow(0);
         }
     }
 }
@@ -69,7 +72,7 @@ function createLocObject(targetDiv, objName, hiddenDirs) {
 function encapsulatedCreateLocObject(objName, targetDiv) {
     if (targetDiv == dirsDiv) {
 
-        let row = dirsTable.insertRow(dirsTable.rows.length);
+        let row = dirsTableBody.insertRow(dirsTableBody.rows.length);
         let dirnameCell = row.insertCell();
 
         dirnameCell.innerText = objName;
@@ -99,7 +102,7 @@ function encapsulatedCreateLocObject(objName, targetDiv) {
         })
 
     } else {
-        let row = filesTable.insertRow(filesTable.rows.length);
+        let row = filesTableBody.insertRow(filesTableBody.rows.length);
         let filenameCell = row.insertCell();
         let creationTimeCell = row.insertCell();
         let lastAccessTimeCell = row.insertCell();
@@ -252,7 +255,7 @@ dirsDiv.addEventListener('click', async (event) => {
 
     if (event.ctrlKey && target !== event.currentTarget) {
 
-        removeDisplayedContent(filesTable);
+        removeDisplayedContent(filesTableBody);
     
         const justFiles = true;
         const receivedData = await window.electronAPI.callWithIpcAddSelectedDirToCurrentScope(target.innerText, justFiles);
@@ -267,7 +270,7 @@ sortingBar.addEventListener('click', async () => {
     event.stopPropagation();
     const target = event.target;
 
-    removeDisplayedContent(filesTable);
+    removeDisplayedContent(filesTableBody);
 
     currentScope = await window.electronAPI.callWithIpcUpdateSortingTypeAndSort(target.id);
 
@@ -286,10 +289,10 @@ window.electronAPI.callWithIpcUpdateSortingIndicator((event, indicatorsObj) => {
 })
 
 window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
-    removeDisplayedContent(currentScopeMonitorTable);
+    removeDisplayedContent(currentScopeMonitorTableBody);
 
     for (let dir of currentScopeDirs) {
-        let row = currentScopeMonitorTable.insertRow(currentScopeMonitorTable.rows.length);
+        let row = currentScopeMonitorTableBody.insertRow(currentScopeMonitorTableBody.rows.length);
         let dirnameCell = row.insertCell();
         let soloButtonCell = row.insertCell();
         let hideButtonCell = row.insertCell();
@@ -312,7 +315,7 @@ window.electronAPI.getCurrentScopeDirs((event, currentScopeDirs) => {
                     }
                 }  
             }
-            removeDisplayedContent(filesTable);
+            removeDisplayedContent(filesTableBody);
             createAllLocObjects(filesDiv, currentScope.fileContent, hiddenDirs);   
         })
     }
