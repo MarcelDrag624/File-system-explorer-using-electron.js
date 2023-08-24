@@ -8,6 +8,15 @@ body {
   margin: 0;
   font-family: Helvetica;
   color: white;
+  background-color: var(--filesTableColor);
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #787878;
 }
 
 #app {

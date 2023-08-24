@@ -28,16 +28,16 @@ let alphabeticalSortingState = 0;
 
 function removeDisplayedContent(targetsToBeDeleted = 'everything') {
     if (targetsToBeDeleted == 'everything') {
-        while (dirsTableBody.rows.length >= 1) {
+        while (dirsTableBody.rows.length > 0) {
             dirsTableBody.deleteRow(0);
         }
 
-        while (filesTableBody.rows.length >= 1) {
+        while (filesTableBody.rows.length > 0) {
             filesTableBody.deleteRow(0);
         }
 
     } else {
-        while (targetsToBeDeleted.rows.length >= 1) {
+        while (targetsToBeDeleted.rows.length > 0) {
             targetsToBeDeleted.deleteRow(0);
         }
     }
